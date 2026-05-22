@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useSite } from '../context/SiteContext';
+import { useContent } from '../context/ContentContext';
 import { motion, AnimatePresence } from 'motion/react';
 import { Lock, Activity, LineChart, Target, Hash, CheckSquare, Search, Code, Link as LinkIcon, Share2, PenTool, Calendar, Headphones, MessageSquare, Wrench, Zap, Type, MessageCircle, ChevronDown, CheckCircle2, AlertTriangle, MapPin, Layout } from 'lucide-react';
 import { ToolAnalyzerModal } from './ToolAnalyzerModal';
@@ -23,51 +24,6 @@ const IconMapper = ({ name, className }: { name: string, className?: string }) =
     default: return <Wrench className={className} />;
   }
 };
-
-const pricingPackages = [
-  {
-    name: 'الباقة المجانية',
-    price: '0',
-    currency: 'ر.س',
-    period: '/ مدى الحياة',
-    desc: 'مجموعة مختارة من الأدوات الأساسية لمساعدتك في البدء.',
-    features: ['حاسبة أداء المتجر', 'فاحص السرعة', 'مولد العناوين', 'دعم مجتمعي'],
-    color: '#22d3a0',
-    buttonLabel: 'ابدأ مجاناً'
-  },
-  {
-    name: 'باقة الأعمال',
-    price: '149',
-    currency: 'ر.س',
-    period: '/ شهرياً',
-    desc: 'احصل على وصول شامل إلى أدوات التحليل الأساسية.',
-    features: ['جميع الأدوات المجانية', 'محلل UX وفاحص SEO', 'تحليل المنافسين', 'أفكار الحملات الإعلانية', 'حلول أزمات Google الأساسية', 'دعم فني عبر البريد'],
-    color: '#4f8ef7',
-    buttonLabel: 'اختر الباقة',
-    popular: true
-  },
-  {
-    name: 'الباقة الاحترافية',
-    price: '299',
-    currency: 'ر.س',
-    period: '/ شهرياً',
-    desc: 'افتح جميع الإمكانيات والأدوات المتقدمة في المنصة.',
-    features: ['وصول كامل لجميع الأدوات', 'أدوات مدعومة بالذكاء الاصطناعي', 'تغطية شاملة لحلول Google', 'تقارير مخصصة ومفصلة', 'مدير حساب مخصص', 'أولوية في الدعم الفني'],
-    color: '#7c3aed',
-    buttonLabel: 'اختر الباقة'
-  },
-  {
-    name: 'باقة مخصصة',
-    price: 'أسعار',
-    currency: 'مخصصة',
-    period: '',
-    desc: 'هل تبحث عن حلول خاصة وحجم عمل أكبر؟',
-    features: ['كل ميزات الاحترافية', 'أدوات مخصصة لتجارتك', 'استشارات تسويقية', 'ربط API خاص'],
-    color: '#10b981',
-    buttonLabel: 'تواصل معنا',
-    contactLink: 'https://wa.me/966XXXXXXXXX'
-  }
-];
 
 const getToolDescription = (name: string) => {
   switch (name) {
@@ -95,9 +51,24 @@ const getToolDescription = (name: string) => {
 
 export const ToolsGrid = () => {
   const { config } = useSite();
+  const { content } = useContent();
   const [openIndex, setOpenIndex] = useState<number | null>(0);
   const [selectedTool, setSelectedTool] = useState<any>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const pricingPackages = content.packages.map((pkg, i) => {
+    const isCustom = pkg.price.includes('أسعار') || pkg.price === 'مخصصة' || isNaN(Number(pkg.price));
+    return {
+      ...pkg,
+      desc: pkg.description,
+      buttonLabel: pkg.ctaText || (i === 0 ? 'ابدأ مجاناً' : i === 3 ? 'تواصل معنا' : 'اختر الباقة'),
+      popular: pkg.isFeatured,
+      color: i === 0 ? '#22d3a0' : i === 1 ? '#4f8ef7' : i === 2 ? '#7c3aed' : '#10b981',
+      currency: isCustom ? '' : 'ر.س',
+      period: isCustom ? '' : (i === 0 ? '/ مدى الحياة' : '/ شهرياً'),
+      contactLink: pkg.ctaLink || (i === 3 && config.contactNumber ? `https://wa.me/${config.contactNumber.replace(/[^0-9]/g, '')}` : undefined)
+    };
+  });
 
   if (!config.sections.tools) return null;
 

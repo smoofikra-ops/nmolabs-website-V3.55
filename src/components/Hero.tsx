@@ -3,6 +3,7 @@ import { useSite } from '../context/SiteContext';
 import { motion, AnimatePresence, useInView } from 'motion/react';
 import { Sparkles, ScanLine, ArrowLeft, Users, Target, TrendingUp } from 'lucide-react';
 import { AnalysisModal } from './AnalysisModal';
+import { useContent } from '../context/ContentContext';
 
 import { ParallaxBackground } from './ParallaxBackground';
 
@@ -51,6 +52,8 @@ const Bubbles = () => {
 
 export const Hero = () => {
   const { config, updateConfig } = useSite();
+  const { content } = useContent();
+  const heroContent = content.hero;
   const [url, setUrl] = useState('');
   const [isScanning, setIsScanning] = useState(false);
   const [scanProgress, setScanProgress] = useState(0);
@@ -156,7 +159,7 @@ export const Hero = () => {
         />
         
         {/* Video Background (if provided) */}
-        {config.heroVideoUrl && (
+        {heroContent.videoUrl && (
           <>
             <video 
               ref={videoRef}
@@ -168,7 +171,7 @@ export const Hero = () => {
               poster={config.heroVideoPoster || undefined}
               className="absolute inset-0 w-full h-full object-cover mix-blend-screen opacity-50 md:opacity-50 transition-opacity duration-1000"
               style={{ opacity: isInView ? 0.5 : 0 }}
-              src={isInView && shouldLoadVideo ? config.heroVideoUrl : undefined} 
+              src={isInView && shouldLoadVideo ? heroContent.videoUrl : undefined} 
             />
             {/* Mobile Video Overlay for readability */}
             <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/40 to-black/80 z-[1] md:hidden pointer-events-none" />
@@ -249,11 +252,11 @@ export const Hero = () => {
           </div>
           
           <h1 className="text-4xl md:text-6xl font-black mb-6 leading-tight tracking-tight drop-shadow-2xl">
-            {config.heroTitle}
+            {heroContent.title}
           </h1>
           
           <p className="text-xl md:text-2xl text-[color:var(--color-text-muted)] mb-12 max-w-2xl mx-auto leading-relaxed font-light min-h-[4rem] md:min-h-[4.5rem]">
-            <TypewriterText text={config.heroSubtitle} />
+            <TypewriterText text={heroContent.description} />
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 mb-12 md:mb-16 max-w-5xl mx-auto">
@@ -308,7 +311,7 @@ export const Hero = () => {
                   </span>
                 ) : (
                   <>
-                    {config.heroButtonText}
+                    {heroContent.ctaText}
                     <ArrowLeft size={20} className="rotate-180 animate-bounce" />
                   </>
                 )}

@@ -1,57 +1,53 @@
 import React, { useState, useRef } from 'react';
 import { useSite } from '../context/SiteContext';
 import { motion, AnimatePresence, useScroll, useTransform } from 'motion/react';
-import { Megaphone, Share2, Search, PenTool, Layout as LayoutIcon, ChevronDown, ArrowUpRight, X } from 'lucide-react';
+import { 
+  Megaphone, Share2, Search, PenTool, Layout as LayoutIcon, 
+  ChevronDown, ArrowUpRight, X 
+} from 'lucide-react';
 import { triggerBookingModal } from './BookingModal';
+import { useContent } from '../context/ContentContext';
 
-const servicesList = [
-  {
-    id: 6,
-    title: 'إنشاء المتاجر الإلكترونية',
-    icon: <LayoutIcon className="w-10 h-10" />,
-    desc: 'من اختيار الاسم والهوية وحتى التشغيل والتسويق الكامل — نبني لك متجرًا احترافيًا جاهزًا للنمو والمبيعات.',
-    deliverables: ['باقة الانطلاقة', 'باقة النمو', 'باقة التشغيل الكامل', 'الباقة المخصصة'],
-  },
-  {
-    id: 1,
-    title: 'إدارة الحملات الإعلانية',
-    icon: <Megaphone className="w-10 h-10" />,
-    desc: 'نوجه ميزانيتك نحو الجمهور الصح. استهداف دقيق يعتمد على البيانات لرفع العائد الإعلاني ROAS.',
-    deliverables: ['دراسة السوق والمنافسين', 'إطلاق وإدارة الإعلانات', 'تحسين مستمر (A/B Testing)', 'تقارير أداء دورية'],
-  },
-  {
-    id: 2,
-    title: 'إدارة السوشيال ميديا',
-    icon: <Share2 className="w-10 h-10" />,
-    desc: 'لا ننشر محتوى فقط، بل نبني مجتمعاً يتفاعل ويشتري. إدارة كاملة للحسابات.',
-    deliverables: ['خطة محتوى شهرية', 'تصميم بوستات وفيديوهات', 'إدارة التفاعل', 'توثيق الحسابات'],
-  },
-  {
-    id: 3,
-    title: 'تحسين محركات البحث SEO',
-    icon: <Search className="w-10 h-10" />,
-    desc: 'نتصدر نتائج بحث جوجل لنضمن لك زوار حقيقيين ومجانيين يبحثون عن منتجك فعلياً.',
-    deliverables: ['تدقيق فني للمتجر', 'تحليل كلمات مفتاحية', 'بناء روابط خلفية (Backlinks)', 'تحسين سرعة الموقع'],
-  },
-  {
-    id: 4,
-    title: 'كتابة المحتوى البيعي',
-    icon: <PenTool className="w-10 h-10" />,
-    desc: 'نكتب الكلمات التي تقنع القارئ بفتح محفظته والدفع مباشرة والتخلي عن التردد.',
-    deliverables: ['وصف منتجات احترافي', 'نصوص الإعلانات (Copywriting)', 'إيميلات تسويقية', 'صفحات الهبوط'],
-  },
-  {
-    id: 5,
-    title: 'تصميم واجهات المتاجر وتحسين UX',
-    icon: <LayoutIcon className="w-10 h-10" />,
-    desc: 'نصمم واجهات لا تبدو جميلة فقط، بل تسهل عملية الشراء وتزيد نسبة التحويل.',
-    deliverables: ['خرائط حرارية لتحليل السلوك', 'تصميم صفحات المنتجات', 'تحسين عملية الدفع Checkout', 'User Testing'],
+const getServiceIcon = (iconName: string) => {
+  switch (iconName) {
+    case 'Layout': return <LayoutIcon className="w-10 h-10" />;
+    case 'Megaphone': return <Megaphone className="w-10 h-10" />;
+    case 'Share2': return <Share2 className="w-10 h-10" />;
+    case 'Search': return <Search className="w-10 h-10" />;
+    case 'PenTool': return <PenTool className="w-10 h-10" />;
+    default: return <LayoutIcon className="w-10 h-10" />;
   }
-];
+};
+
+const getServiceDeliverables = (title: string) => {
+  const t = title || '';
+  if (t.includes('إنشاء') || t.includes('متاجر')) {
+    return ['باقة الانطلاقة', 'باقة النمو', 'باقة التشغيل الكامل', 'الباقة المخصصة'];
+  }
+  if (t.includes('الحملات') || t.includes('إعلانات')) {
+    return ['دراسة السوق والمنافسين', 'إطلاق وإدارة الإعلانات', 'تحسين مستمر (A/B Testing)', 'تقارير أداء دورية'];
+  }
+  if (t.includes('سوشيال') || t.includes('السوشيال')) {
+    return ['خطة محتوى شهرية', 'تصميم بوستات وفيديوهات', 'إدارة التفاعل', 'توثيق الحسابات'];
+  }
+  if (t.includes('SEO') || t.includes('سيو') || t.includes('البحث')) {
+    return ['تدقيق فني للمتجر', 'تحليل كلمات مفتاحية', 'بناء روابط خلفية (Backlinks)', 'تحسين سرعة الموقع'];
+  }
+  if (t.includes('المحتوى') || t.includes('كتابة')) {
+    return ['وصف منتجات احترافي', 'نصوص الإعلانات (Copywriting)', 'إيميلات تسويقية', 'صفحات الهبوط'];
+  }
+  if (t.includes('واجهات') || t.includes('تصميم') || t.includes('UX')) {
+    return ['خرائط حرارية لتحليل السلوك', 'تصميم صفحات المنتجات', 'تحسين عملية الدفع Checkout', 'User Testing'];
+  }
+  return ['استشارة مجانية', 'تحليل الأداء الرقمي', 'دعم فني متكامل', 'خطة تحسين مقترحة'];
+};
 
 export const Services = () => {
   const { config } = useSite();
-  const [openId, setOpenId] = useState<number | null>(null);
+  const { content } = useContent();
+  const services = content.services || [];
+  
+  const [openId, setOpenId] = useState<string | null>(null);
   const sectionRef = useRef<HTMLElement>(null);
   
   const { scrollYProgress } = useScroll({
@@ -65,7 +61,12 @@ export const Services = () => {
 
   if (!config.sections.services) return null;
 
-  const activeService = servicesList.find(s => s.id === openId);
+  const activeService = services.find(s => s.id === openId);
+  const isStoreService = activeService && (
+    activeService.id === 'srv_1' || 
+    activeService.title.includes('إنشاء المتاجر') || 
+    activeService.title.includes('متاجر')
+  );
 
   return (
     <section className="py-32 relative z-10 bg-radial-glow" id="services" ref={sectionRef}>
@@ -103,7 +104,8 @@ export const Services = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {servicesList.map((service, index) => {
+          {services.map((service, index) => {
+            const serviceIcon = getServiceIcon(service.icon);
             return (
               <motion.div
                 key={service.id}
@@ -127,13 +129,13 @@ export const Services = () => {
                       <div 
                         className="p-4 rounded-2xl transition-all duration-500 bg-black/50 shadow-[inset_0_2px_8px_rgba(0,0,0,0.9),0_1px_0_rgba(255,255,255,0.05)] border border-white/5 text-[color:var(--color-brand-blue-val)] group-hover:text-white group-hover:bg-[color:var(--color-brand-blue-val)] group-hover:shadow-[0_0_20px_var(--color-brand-blue-val)] flex items-center justify-center transform group-hover:scale-110 group-hover:rotate-3"
                       >
-                        {service.icon}
+                        {serviceIcon}
                       </div>
                     </div>
                     
                     <h3 className="text-2xl font-bold mb-3 text-[color:var(--color-text-main)] group-hover:text-[color:var(--color-brand-blue-val)] transition-colors duration-300">{service.title}</h3>
                     <p className="text-[color:var(--color-text-muted)] leading-relaxed text-sm lg:text-base font-light mb-8 flex-1">
-                      {service.desc}
+                      {service.description}
                     </p>
 
                     {/* Section Divider with animation */}
@@ -141,9 +143,9 @@ export const Services = () => {
 
                     <button 
                       onClick={() => setOpenId(service.id)}
-                      className="flex items-center gap-2 text-[color:var(--color-brand-blue-val)] group-hover:text-white font-bold mt-auto hover:gap-3 transition-all duration-300"
+                      className="flex items-center gap-2 text-[color:var(--color-brand-blue-val)] group-hover:text-white font-bold mt-auto hover:gap-3 transition-all duration-300 cursor-pointer"
                     >
-                      تفاصيل أكثر
+                      <span>تفاصيل أكثر</span>
                       <ArrowUpRight size={18} />
                     </button>
                   </div>
@@ -166,7 +168,7 @@ export const Services = () => {
                animate={{ opacity: 1, scale: 1, y: 0 }}
                exit={{ opacity: 0, scale: 0.95, y: 20 }}
                onClick={(e) => e.stopPropagation()}
-               className={`bg-[color:var(--color-brand-darker)] border border-white/10 rounded-3xl w-full ${activeService.id === 6 ? 'max-w-6xl' : 'max-w-2xl'} overflow-hidden shadow-2xl relative flex flex-col max-h-[95vh] md:max-h-[90vh]`}
+               className={`bg-[color:var(--color-brand-darker)] border border-white/10 rounded-3xl w-full ${isStoreService ? 'max-w-6xl' : 'max-w-2xl'} overflow-hidden shadow-2xl relative flex flex-col max-h-[95vh] md:max-h-[90vh]`}
             >
                {/* Modal Header */}
                <div className="p-6 pb-6 border-b border-white/10 flex justify-between items-start sticky top-0 bg-[color:var(--color-brand-darker)] z-10">
@@ -174,13 +176,13 @@ export const Services = () => {
                    <div 
                      className="p-3 w-max rounded-xl text-[color:var(--color-brand-blue-val)] bg-[color:var(--color-brand-blue-val)]/10 mb-2"
                    >
-                     {activeService.icon}
+                     {getServiceIcon(activeService.icon)}
                    </div>
                    <h3 className="text-2xl md:text-3xl font-bold text-white pr-1">{activeService.title}</h3>
                  </div>
                  <button 
                    onClick={() => setOpenId(null)}
-                   className="p-2 text-gray-400 hover:text-white hover:bg-white/10 rounded-full transition-colors"
+                   className="p-2 text-gray-400 hover:text-white hover:bg-white/10 rounded-full transition-colors cursor-pointer"
                  >
                    <X size={24} />
                  </button>
@@ -188,11 +190,11 @@ export const Services = () => {
 
                {/* Modal Body */}
                <div className="p-6 md:p-8 overflow-y-auto custom-scrollbar">
-                 <p className={`text-lg text-[color:var(--color-text-muted)] font-light leading-relaxed ${activeService.id === 6 ? 'text-center max-w-3xl mx-auto mb-10' : 'mb-8'}`}>
-                   {activeService.desc}
+                 <p className={`text-lg text-[color:var(--color-text-muted)] font-light leading-relaxed ${isStoreService ? 'text-center max-w-3xl mx-auto mb-10' : 'mb-8'}`}>
+                   {activeService.description}
                  </p>
                  
-                 {activeService.id !== 6 && (
+                 {!isStoreService && (
                    <>
                      <h4 className="text-sm font-bold mb-6 text-[color:var(--color-brand-green-val)] uppercase tracking-wider flex items-center gap-2">
                        <div className="w-2 h-2 rounded-full bg-[color:var(--color-brand-green-val)] shadow-[0_0_8px_var(--color-brand-green-val)]" />
@@ -200,7 +202,7 @@ export const Services = () => {
                      </h4>
                      
                      <ul className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
-                       {activeService.deliverables.map((item, i) => (
+                       {getServiceDeliverables(activeService.title).map((item, i) => (
                          <li key={i} className="flex items-center gap-3 text-[color:var(--color-text-main)] bg-[color:var(--glass-bg)] border border-[color:var(--glass-border)] p-4 rounded-xl">
                            {item}
                          </li>
@@ -209,7 +211,7 @@ export const Services = () => {
                    </>
                  )}
 
-                 {activeService.id === 6 && (
+                 {isStoreService && (
                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                      {/* Package 1 */}
                      <div className="relative rounded-3xl p-6 flex flex-col h-full bg-black/40 border border-white/5 hover:border-blue-500/50 hover:shadow-[0_0_30px_rgba(59,130,246,0.2)] transition-all duration-300 group">
@@ -227,7 +229,12 @@ export const Services = () => {
                              <li key={i} className="flex items-start gap-2 text-sm text-gray-300"><ChevronDown className="w-4 h-4 text-blue-400 rotate-[-90deg] shrink-0 mt-0.5" /> <span>{txt}</span></li>
                            ))}
                          </ul>
-                         <button className="w-full py-3 rounded-xl font-bold bg-blue-500/10 text-blue-400 border border-blue-500/20 hover:bg-blue-500/30 transition-colors shrink-0">ابدأ متجرك الآن</button>
+                         <button 
+                           onClick={() => { setOpenId(null); triggerBookingModal('إنشاء المتاجر - باقة الانطلاقة'); }}
+                           className="w-full py-3 rounded-xl font-bold bg-blue-500/10 text-blue-400 border border-blue-500/20 hover:bg-blue-500/30 transition-colors shrink-0 cursor-pointer"
+                         >
+                           ابدأ متجرك الآن
+                         </button>
                        </div>
                      </div>
 
@@ -249,7 +256,12 @@ export const Services = () => {
                              <li key={i} className="flex items-start gap-2 text-sm text-gray-300"><ChevronDown className="w-4 h-4 text-brand-purple rotate-[-90deg] shrink-0 mt-0.5" /> <span>{txt}</span></li>
                            ))}
                          </ul>
-                         <button className="w-full py-3 rounded-xl font-bold bg-gradient-to-r from-brand-blue to-brand-purple text-white border-none hover:shadow-[0_0_20px_rgba(124,58,237,0.5)] transition-all shrink-0">ابدأ النمو</button>
+                         <button 
+                           onClick={() => { setOpenId(null); triggerBookingModal('إنشاء المتاجر - باقة النمو'); }}
+                           className="w-full py-3 rounded-xl font-bold bg-gradient-to-r from-brand-blue to-brand-purple text-white border-none hover:shadow-[0_0_20px_rgba(124,58,237,0.5)] transition-all shrink-0 cursor-pointer"
+                         >
+                           ابدأ النمو
+                         </button>
                        </div>
                      </div>
 
@@ -270,7 +282,12 @@ export const Services = () => {
                              <li key={i} className="flex items-start gap-2 text-sm text-gray-300"><ChevronDown className="w-4 h-4 text-brand-green rotate-[-90deg] shrink-0 mt-0.5" /> <span>{txt}</span></li>
                            ))}
                          </ul>
-                         <button className="w-full py-3 rounded-xl font-bold bg-brand-green/10 text-brand-green border border-brand-green/20 hover:bg-brand-green/30 transition-colors shrink-0">ابدأ التشغيل الكامل</button>
+                         <button 
+                           onClick={() => { setOpenId(null); triggerBookingModal('إنشاء المتاجر - التشغيل الكامل'); }}
+                           className="w-full py-3 rounded-xl font-bold bg-brand-green/10 text-brand-green border border-brand-green/20 hover:bg-brand-green/30 transition-colors shrink-0 cursor-pointer"
+                         >
+                           ابدأ التشغيل الكامل
+                         </button>
                        </div>
                      </div>
 
@@ -288,7 +305,12 @@ export const Services = () => {
                              <li key={i} className="flex items-start gap-2 text-sm text-gray-300"><ChevronDown className="w-4 h-4 text-orange-400 rotate-[-90deg] shrink-0 mt-0.5" /> <span>{txt}</span></li>
                            ))}
                          </ul>
-                         <button className="w-full py-3 rounded-xl font-bold bg-orange-500/10 text-orange-400 border border-orange-500/20 hover:bg-orange-500/30 transition-colors shrink-0">اطلب خطة مخصصة</button>
+                         <button 
+                           onClick={() => { setOpenId(null); triggerBookingModal('إنشاء المتاجر - الباقة المخصصة'); }}
+                           className="w-full py-3 rounded-xl font-bold bg-orange-500/10 text-orange-400 border border-orange-500/20 hover:bg-orange-500/30 transition-colors shrink-0 cursor-pointer"
+                         >
+                           اطلب خطة مخصصة
+                         </button>
                        </div>
                      </div>
                    </div>
@@ -296,10 +318,10 @@ export const Services = () => {
                </div>
 
                {/* Modal Footer */}
-               {(activeService.id !== 6) && (
+               {!isStoreService && (
                  <div className="p-6 md:p-8 bg-white/5 border-t border-white/10 flex justify-end items-center gap-4 sticky bottom-0">
                    <button 
-                      className="w-full md:w-auto flex items-center justify-center gap-2 text-white font-bold py-3 px-8 rounded-xl transition-all shadow-[0_0_15px_rgba(79,142,247,0.3)] hover:shadow-[0_0_25px_rgba(79,142,247,0.5)] transform hover:scale-105"
+                      className="w-full md:w-auto flex items-center justify-center gap-2 text-white font-bold py-3 px-8 rounded-xl transition-all shadow-[0_0_15px_rgba(79,142,247,0.3)] hover:shadow-[0_0_25px_rgba(79,142,247,0.5)] transform hover:scale-105 cursor-pointer"
                       style={{ backgroundColor: config.primaryColor }}
                       onClick={(e) => {
                         e.stopPropagation();
@@ -307,7 +329,7 @@ export const Services = () => {
                         triggerBookingModal(activeService.title);
                       }}
                     >
-                     اطلب الخدمة الآن
+                     <span>اطلب الخدمة الآن</span>
                      <ArrowUpRight size={18} />
                    </button>
                  </div>

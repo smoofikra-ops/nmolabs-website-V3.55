@@ -5,6 +5,9 @@ import { Hero } from './components/Hero';
 import { BookingModal } from './components/BookingModal';
 import { MouseParticles } from './components/MouseParticles';
 import { motion, useScroll, useSpring } from 'motion/react';
+import { ContentProvider, useContent } from './context/ContentContext';
+
+const AdminDashboard = lazy(() => import('./components/AdminDashboard').then(module => ({ default: module.AdminDashboard })));
 
 const Services = lazy(() => import('./components/Services').then(module => ({ default: module.Services })));
 const WhyChooseUs = lazy(() => import('./components/WhyChooseUs').then(module => ({ default: module.WhyChooseUs })));
@@ -107,22 +110,42 @@ const MainContent = () => {
 
 export default function App() {
   return (
-    <SiteProvider>
-      <AppContent />
-    </SiteProvider>
+    <ContentProvider>
+      <SiteProvider>
+        <AppContent />
+      </SiteProvider>
+    </ContentProvider>
   );
 }
 
 function AppContent() {
   const { config } = useSite();
+  const { content } = useContent();
   const isHome = config.currentRoute === 'home' || !config.currentRoute;
+
+  const isAdminPath = window.location.pathname.replace(/\/$/, '') === '/admin';
+
+  if (isAdminPath) {
+    return (
+      <Suspense fallback={
+        <div className="min-h-screen flex items-center justify-center bg-[#07070F] text-white">
+          <div className="w-12 h-12 border-4 border-brand-blue border-t-transparent rounded-full animate-spin"></div>
+        </div>
+      }>
+        <AdminDashboard />
+      </Suspense>
+    );
+  }
 
   return (
     <div 
       className="relative min-h-screen selection:bg-[color:var(--color-brand-purple-val)] selection:text-white pb-20 bg-cover bg-center bg-fixed transition-colors duration-300"
       style={{
         backgroundImage: config.backgroundImage ? `url(${config.backgroundImage})` : 'none',
-        backgroundColor: config.backgroundColor
+        backgroundColor: config.backgroundColor,
+        ['--color-brand-blue-val' as any]: content.identity.primaryColor,
+        ['--color-brand-purple-val' as any]: content.identity.secondaryColor,
+        ['--color-brand-green-val' as any]: content.identity.accentColor,
       }}
     >
       <ScrollProgress />
