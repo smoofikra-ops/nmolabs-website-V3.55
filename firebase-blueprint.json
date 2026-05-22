@@ -1,0 +1,61 @@
+{
+  "entities": {
+    "Booking": {
+      "title": "Booking",
+      "description": "A scheduled consultation booking synced with Google Calendar",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier of the booking"
+        },
+        "fullName": {
+          "type": "string",
+          "description": "Customer's full name"
+        },
+        "mobileNumber": {
+          "type": "string",
+          "description": "Customer's Saudi mobile number"
+        },
+        "clientType": {
+          "type": "string",
+          "enum": ["company", "individual"],
+          "description": "Type of client (Company/Individual)"
+        },
+        "serviceType": {
+          "type": "string",
+          "description": "The category of service chosen"
+        },
+        "notes": {
+          "type": "string",
+          "description": "Additional notes/details provided by the client"
+        },
+        "appointmentDate": {
+          "type": "string",
+          "format": "date",
+          "description": "Preferred date (YYYY-MM-DD)"
+        },
+        "appointmentTime": {
+          "type": "string",
+          "description": "Preferred time slot (HH:MM)"
+        },
+        "googleEventId": {
+          "type": "string",
+          "description": "The associated Google Calendar event ID"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Timestamp when the booking was created"
+        }
+      },
+      "required": ["fullName", "mobileNumber", "clientType", "serviceType", "appointmentDate", "appointmentTime", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/bookings/{bookingId}": {
+      "schema": "Booking",
+      "description": "Collection of active and historic customer consulting bookings"
+    }
+  }
+}

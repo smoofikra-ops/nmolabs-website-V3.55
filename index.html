@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <script>
+      // Workaround for libraries that try to overwrite fetch API globals
+      ['fetch', 'Headers', 'Request', 'Response'].forEach((name) => {
+        let val = window[name];
+        if (val) {
+          try {
+            Object.defineProperty(window, name, {
+              enumerable: true,
+              configurable: true,
+              get: () => val,
+              set: (newVal) => { val = newVal; }
+            });
+          } catch (e) {}
+        }
+      });
+    </script>
+    <meta name="viewport" content="width=1280" />
+    <meta name="description" content="نمو لابز (NMOLABS) شريك نمو تقني، يدمج بين أدوات الذكاء الاصطناعي وخبرات التسويق المتقدمة لتقديم حلول متكاملة ترتقي بمتجرك وتضاعف أرباحك." />
+    <meta name="keywords" content="نمو لابز, NMOLABS, تسويق إلكتروني, ذكاء اصطناعي, تحسين متاجر, سلة, زد, تطوير مواقع, تحسين محركات البحث, SEO" />
+    <meta property="og:title" content="نمو لابز | NMOLABS" />
+    <meta property="og:description" content="منصة وشريك نمو تقني لرواد الأعمال والمتاجر الإلكترونية في السعودية." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://nmolabs.com" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="نمو لابز | NMOLABS" />
+    <meta name="twitter:description" content="منصة وشريك نمو تقني لرواد الأعمال والمتاجر الإلكترونية في السعودية." />
+    
+    <title>نمو لابز | NMOLABS</title>
+    
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "NMOLABS",
+      "url": "https://nmolabs.com",
+      "logo": "https://nmolabs.com/logo.png",
+      "description": "منصة وشريك نمو تقني لرواد الأعمال والمتاجر الإلكترونية، ندمج بين أحدث أدوات الذكاء الاصطناعي وخبرات التسويق المتقدمة.",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Riyadh",
+        "addressCountry": "SA"
+      },
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "telephone": "+966500000000",
+        "contactType": "customer service"
+      }
+    }
+    </script>
+  </head>
+  <body class="bg-[#07070F] text-white overflow-x-hidden">
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
+

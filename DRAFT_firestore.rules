@@ -1,0 +1,74 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Global Safety Net default catch-all
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Helper functions
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isVerifiedUser() {
+      return isSignedIn() && request.auth.token.email_verified == true;
+    }
+
+    function isAdmin() {
+      return isVerifiedUser() && request.auth.token.email == 'smoofikra@gmail.com';
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    // Validation helper for Booking entity
+    function isValidBooking(data) {
+      return data.keys().hasAll(['fullName', 'mobileNumber', 'clientType', 'serviceType', 'appointmentDate', 'appointmentTime', 'createdAt'])
+        && data.keys().size() <= 9
+        && data.fullName is string
+        && data.fullName.size() >= 2
+        && data.fullName.size() <= 128
+        && data.mobileNumber is string
+        && data.mobileNumber.size() >= 9
+        && data.mobileNumber.size() <= 20
+        && (data.clientType == 'company' || data.clientType == 'individual')
+        && data.serviceType is string
+        && data.serviceType.size() <= 128
+        && data.appointmentDate is string
+        && data.appointmentDate.size() == 10
+        && data.appointmentTime is string
+        && data.appointmentTime.size() <= 5
+        && (!data.keys().hasAny(['googleEventId']) || data.googleEventId is string);
+    }
+
+    // Bookings collection
+    match /bookings/{bookingId} {
+      allow get: if isAdmin() || (isSignedIn() && existing().userId == request.auth.uid);
+      allow list: if isAdmin();
+      
+      // Allow creation by any client so they can book, with structural validation
+      allow create: if isValidId(bookingId) 
+        && isValidBooking(incoming())
+        && incoming().createdAt == request.time;
+
+      // Allow updates only by admin
+      allow update: if isAdmin()
+        && isValidBooking(incoming())
+        && incoming().createdAt == existing().createdAt;
+
+      // Allow deletion only by admin
+      allow delete: if isAdmin();
+    }
+  }
+}
