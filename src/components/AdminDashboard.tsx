@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useContent, SiteContent, defaultContent } from '../context/ContentContext';
+import { useContent, SiteContent, defaultContent, supabase, isSupabaseConfigured } from '../context/ContentContext';
 import { 
   Plus, Trash2, Edit, Save, RotateCcw, LogOut, Lock, 
   Settings, Play, Briefcase, Package, HelpCircle, Trophy, 
@@ -8,14 +8,19 @@ import {
 import { motion, AnimatePresence } from 'motion/react';
 
 export const AdminDashboard: React.FC = () => {
-  // TODO: Replace localStorage auth with Supabase Auth before production.
   const { content, updateContent, resetContent } = useContent();
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
+    if (isSupabaseConfigured) return false; // Handled by Supabase Auth state listener
     return localStorage.getItem('nmo_admin_authenticated') === 'true';
   });
   
   const [passcode, setPasscode] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  
   const [loginError, setLoginError] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
   const [activeTab, setActiveTab] = useState<'identity' | 'hero' | 'services' | 'packages' | 'faq' | 'stories'>('identity');
   
   // Dynamic local state of content to edit
@@ -42,39 +47,115 @@ export const AdminDashboard: React.FC = () => {
     }
   }, [toastMessage]);
 
-  const handleLoginSubmit = (e: React.FormEvent) => {
+  // Supabase Auth session listener
+  useEffect(() => {
+    if (!isSupabaseConfigured) return;
+
+    // Check active session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session) {
+        setIsAuthenticated(true);
+      }
+    });
+
+    // Listen to changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      if (session) {
+        setIsAuthenticated(true);
+      } else {
+        setIsAuthenticated(false);
+      }
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, []);
+
+  const handleLoginSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (passcode === '1122') {
-      localStorage.setItem('nmo_admin_authenticated', 'true');
-      setIsAuthenticated(true);
-      setToastMessage({ text: 'تم تسجيل الدخول بنجاح!', type: 'success' });
-    } else {
-      setLoginError(true);
-      setTimeout(() => setLoginError(false), 500); // For shake animation duration
-      setToastMessage({ text: 'رمز المرور غير صحيح!', type: 'error' });
+    setIsSubmitting(true);
+
+    if (!isSupabaseConfigured) {
+      if (passcode === '1122') {
+        localStorage.setItem('nmo_admin_authenticated', 'true');
+        setIsAuthenticated(true);
+        setToastMessage({ text: 'تم تسجيل الدخول بنجاح عبر الرمز المؤقت!', type: 'success' });
+      } else {
+        setLoginError(true);
+        setTimeout(() => setLoginError(false), 500); // For shake animation duration
+        setToastMessage({ text: 'رمز المرور غير صحيح!', type: 'error' });
+      }
+      setIsSubmitting(false);
+      return;
+    }
+
+    try {
+      const { error } = await supabase.auth.signInWithPassword({
+        email,
+        password
+      });
+
+      if (error) {
+        setLoginError(true);
+        setTimeout(() => setLoginError(false), 500);
+        let errorMsg = 'البريد الإلكتروني أو كلمة المرور غير صحيحة!';
+        if (error.message.includes('Invalid login credentials')) {
+          errorMsg = 'البريد الإلكتروني أو كلمة المرور غير صحيحة!';
+        } else if (error.message.includes('Email not confirmed')) {
+          errorMsg = 'يرجى تأكيد البريد الإلكتروني الخاص بك أولاً!';
+        } else {
+          errorMsg = error.message;
+        }
+        setToastMessage({ text: errorMsg, type: 'error' });
+      } else {
+        setToastMessage({ text: 'تم تسجيل الدخول بنجاح!', type: 'success' });
+      }
+    } catch (err) {
+      setToastMessage({ text: 'حدث خطأ أثناء الاتصال بالنظام.', type: 'error' });
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem('nmo_admin_authenticated');
-    setIsAuthenticated(false);
+  const handleLogout = async () => {
+    if (isSupabaseConfigured) {
+      await supabase.auth.signOut();
+    } else {
+      localStorage.removeItem('nmo_admin_authenticated');
+      setIsAuthenticated(false);
+    }
     setToastMessage({ text: 'تم تسجيل الخروج بنجاح!', type: 'info' });
   };
 
-  const handleSaveAll = () => {
-    updateContent(editedContent);
-    setToastMessage({ text: 'تم حفظ جميع التعديلات بنجاح وتطبيقها على الموقع!', type: 'success' });
+  const handleSaveAll = async () => {
+    setIsSaving(true);
+    try {
+      await updateContent(editedContent);
+      setToastMessage({ text: 'تم حفظ جميع التعديلات بنجاح ومزامنتها!', type: 'success' });
+    } catch (e: any) {
+      setToastMessage({ text: `فشل الحفظ في قاعدة البيانات: ${e.message || e}`, type: 'error' });
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   const handleResetDefaults = () => {
     setConfirmDelete({
       type: 'الافتراضيات',
       index: -1,
-      onConfirm: () => {
-        resetContent();
-        setEditedContent(JSON.parse(JSON.stringify(defaultContent)));
-        setToastMessage({ text: 'تم استعادة محتوى المصنع الافتراضي!', type: 'info' });
-        setConfirmDelete(null);
+      onConfirm: async () => {
+        setIsSaving(true);
+        try {
+          await resetContent();
+          setEditedContent(JSON.parse(JSON.stringify(defaultContent)));
+          setToastMessage({ text: 'تم استعادة محتوى المصنع الافتراضي ومزامنته!', type: 'info' });
+        } catch (e: any) {
+          setToastMessage({ text: `فشل التصفير في قاعدة البيانات: ${e.message || e}`, type: 'error' });
+        } finally {
+          setIsSaving(false);
+          setConfirmDelete(null);
+        }
       }
     });
   };
@@ -128,28 +209,71 @@ export const AdminDashboard: React.FC = () => {
               <Lock size={28} className="animate-pulse" />
             </div>
             <h1 className="text-2xl font-black text-white font-arabic">لوحة التحكم NMOLABS</h1>
-            <p className="text-gray-400 text-sm mt-2 text-center">أدخل رمز المرور لفتح لوحة التحكم والتعديل على محتوى الموقع</p>
+            <p className="text-gray-400 text-sm mt-2 text-center">
+              {isSupabaseConfigured 
+                ? 'سجل دخولك باستخدام بريد الإدمن وكلمة المرور المشفرة' 
+                : 'أدخل رمز المرور لفتح لوحة التحكم والتعديل على محتوى الموقع'}
+            </p>
+            {!isSupabaseConfigured && (
+              <span className="mt-3 px-3 py-1 bg-amber-500/10 border border-amber-500/20 text-amber-400 rounded-full text-[10px] font-bold">
+                ⚙️ وضع التطوير المحلي النشط (Passcode)
+              </span>
+            )}
+            {isSupabaseConfigured && (
+              <span className="mt-3 px-3 py-1 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 rounded-full text-[10px] font-bold">
+                🔒 اتصال آمن وموثق بقاعدة Supabase
+              </span>
+            )}
           </div>
           
-          <form onSubmit={handleLoginSubmit} className="space-y-6">
-            <div className="space-y-2">
-              <label className="text-gray-300 text-xs font-bold block">رمز المرور (Passcode)</label>
-              <input 
-                type="password"
-                value={passcode}
-                onChange={(e) => setPasscode(e.target.value)}
-                placeholder="••••"
-                maxLength={8}
-                className="w-full bg-white/5 hover:bg-white/10 focus:bg-black/60 border border-white/10 focus:border-blue-500 rounded-2xl py-4 px-6 text-center text-xl font-bold tracking-widest text-white outline-none transition-all placeholder:text-gray-600"
-                autoFocus
-              />
-            </div>
+          <form onSubmit={handleLoginSubmit} className="space-y-5">
+            {isSupabaseConfigured ? (
+              <>
+                <div className="space-y-2">
+                  <label className="text-gray-300 text-xs font-bold block">البريد الإلكتروني (Admin Email)</label>
+                  <input 
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="admin@nmolabs.com"
+                    required
+                    className="w-full bg-white/5 hover:bg-white/10 focus:bg-black/60 border border-white/10 focus:border-blue-500 rounded-2xl py-3.5 px-5 text-right text-sm text-white outline-none transition-all placeholder:text-gray-600"
+                    autoFocus
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-gray-300 text-xs font-bold block">كلمة المرور (Password)</label>
+                  <input 
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="••••••••"
+                    required
+                    className="w-full bg-white/5 hover:bg-white/10 focus:bg-black/60 border border-white/10 focus:border-blue-500 rounded-2xl py-3.5 px-5 text-right text-sm text-white outline-none transition-all placeholder:text-gray-600"
+                  />
+                </div>
+              </>
+            ) : (
+              <div className="space-y-2">
+                <label className="text-gray-300 text-xs font-bold block">رمز المرور (Passcode)</label>
+                <input 
+                  type="password"
+                  value={passcode}
+                  onChange={(e) => setPasscode(e.target.value)}
+                  placeholder="••••"
+                  maxLength={8}
+                  className="w-full bg-white/5 hover:bg-white/10 focus:bg-black/60 border border-white/10 focus:border-blue-500 rounded-2xl py-4 px-6 text-center text-xl font-bold tracking-widest text-white outline-none transition-all placeholder:text-gray-600"
+                  autoFocus
+                />
+              </div>
+            )}
             
             <button 
               type="submit" 
-              className="w-full py-4 rounded-2xl font-bold text-black bg-gradient-to-r from-blue-400 via-purple-400 to-emerald-300 hover:opacity-90 active:scale-[0.98] transition-all flex items-center justify-center gap-2 shadow-lg shadow-blue-500/10 cursor-pointer"
+              disabled={isSubmitting}
+              className="w-full py-4 rounded-2xl font-bold text-black bg-gradient-to-r from-blue-400 via-purple-400 to-emerald-300 hover:opacity-90 active:scale-[0.98] disabled:opacity-50 transition-all flex items-center justify-center gap-2 shadow-lg shadow-blue-500/10 cursor-pointer"
             >
-              <span>دخول النظام</span>
+              <span>{isSubmitting ? 'جاري التحقق...' : 'دخول النظام'}</span>
               <Check size={18} />
             </button>
           </form>
@@ -848,10 +972,20 @@ export const AdminDashboard: React.FC = () => {
               <div className="flex gap-3 w-full sm:w-auto">
                 <button 
                   onClick={handleSaveAll}
-                  className="flex-1 sm:flex-initial flex items-center justify-center gap-2 px-8 py-3.5 rounded-2xl bg-gradient-to-r from-blue-400 via-purple-400 to-emerald-300 hover:opacity-90 active:scale-[0.98] transition-all font-bold text-black shadow-lg shadow-blue-500/10 cursor-pointer"
+                  disabled={isSaving}
+                  className="flex-1 sm:flex-initial flex items-center justify-center gap-2 px-8 py-3.5 rounded-2xl bg-gradient-to-r from-blue-400 via-purple-400 to-emerald-300 hover:opacity-90 active:scale-[0.98] disabled:opacity-50 transition-all font-bold text-black shadow-lg shadow-blue-500/10 cursor-pointer"
                 >
-                  <Save size={16} />
-                  <span>حفظ التغييرات ونشرها</span>
+                  {isSaving ? (
+                    <>
+                      <div className="w-4 h-4 border-2 border-black border-t-transparent rounded-full animate-spin" />
+                      <span>جاري الحفظ والمزامنة...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Save size={16} />
+                      <span>حفظ التغييرات ونشرها</span>
+                    </>
+                  )}
                 </button>
               </div>
             </div>

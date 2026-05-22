@@ -1,4 +1,22 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { createClient } from '@supabase/supabase-js';
+
+// Retrieve environment variables
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || '';
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || '';
+
+// Initialize the Supabase client safely
+export const supabase = createClient(
+  supabaseUrl || 'https://placeholder.supabase.co',
+  supabaseAnonKey || 'placeholder'
+);
+
+// Boolean flag to check if Supabase is properly configured
+export const isSupabaseConfigured = !!(
+  supabaseUrl && 
+  supabaseAnonKey && 
+  supabaseUrl !== 'https://placeholder.supabase.co'
+);
 
 // Type definitions for our dynamic content
 export interface IdentitySettings {
@@ -263,8 +281,10 @@ export const defaultContent: SiteContent = {
 
 interface ContentContextProps {
   content: SiteContent;
-  updateContent: (newContent: SiteContent) => void;
-  resetContent: () => void;
+  updateContent: (newContent: SiteContent) => Promise<void>;
+  resetContent: () => Promise<void>;
+  isSupabaseConfigured: boolean;
+  isLoading: boolean;
 }
 
 const ContentContext = createContext<ContentContextProps | undefined>(undefined);
@@ -275,7 +295,6 @@ export const ContentProvider: React.FC<{ children: React.ReactNode }> = ({ child
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
-        // Ensure all top-level keys exist by merging with defaultContent
         return {
           ...defaultContent,
           ...parsed,
@@ -290,14 +309,89 @@ export const ContentProvider: React.FC<{ children: React.ReactNode }> = ({ child
     return defaultContent;
   });
 
-  const updateContent = (newContent: SiteContent) => {
+  const [isLoading, setIsLoading] = useState<boolean>(isSupabaseConfigured);
+
+  // Fetch settings from Supabase on mount if configured
+  useEffect(() => {
+    const fetchSettings = async () => {
+      if (!isSupabaseConfigured) {
+        setIsLoading(false);
+        return;
+      }
+      try {
+        const { data, error } = await supabase
+          .from('site_settings')
+          .select('content')
+          .eq('id', 1)
+          .single();
+        
+        if (data && data.content && Object.keys(data.content).length > 0) {
+          const parsed = data.content as any;
+          const merged: SiteContent = {
+            ...defaultContent,
+            ...parsed,
+            identity: { ...defaultContent.identity, ...(parsed.identity || {}) },
+            hero: { ...defaultContent.hero, ...(parsed.hero || {}) },
+            services: parsed.services || defaultContent.services,
+            packages: parsed.packages || defaultContent.packages,
+            faq: parsed.faq || defaultContent.faq,
+            successStories: parsed.successStories || defaultContent.successStories,
+          };
+          setContent(merged);
+          localStorage.setItem('nmolabsSiteContent', JSON.stringify(merged));
+        } else if (error) {
+          console.warn("Supabase site_settings empty or inaccessible. Using local state.", error.message);
+        }
+      } catch (e) {
+        console.error("Failed to fetch settings from Supabase database:", e);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    
+    fetchSettings();
+  }, []);
+
+  const updateContent = async (newContent: SiteContent) => {
     setContent(newContent);
     localStorage.setItem('nmolabsSiteContent', JSON.stringify(newContent));
+    
+    if (isSupabaseConfigured) {
+      try {
+        const { error } = await supabase
+          .from('site_settings')
+          .upsert({ id: 1, content: newContent, updated_at: new Date().toISOString() });
+        
+        if (error) {
+          console.error("Failed to sync settings with Supabase Database:", error.message);
+          throw error;
+        }
+      } catch (e) {
+        console.error("Failed to sync settings with Supabase:", e);
+        throw e;
+      }
+    }
   };
 
-  const resetContent = () => {
+  const resetContent = async () => {
     setContent(defaultContent);
     localStorage.removeItem('nmolabsSiteContent');
+    
+    if (isSupabaseConfigured) {
+      try {
+        const { error } = await supabase
+          .from('site_settings')
+          .upsert({ id: 1, content: defaultContent, updated_at: new Date().toISOString() });
+        
+        if (error) {
+          console.error("Failed to reset settings in Supabase Database:", error.message);
+          throw error;
+        }
+      } catch (e) {
+        console.error("Failed to reset settings in Supabase:", e);
+        throw e;
+      }
+    }
   };
 
   // Sync visual colors to documentElement classes/variables if needed
@@ -321,7 +415,7 @@ export const ContentProvider: React.FC<{ children: React.ReactNode }> = ({ child
   }, [content.identity]);
 
   return (
-    <ContentContext.Provider value={{ content, updateContent, resetContent }}>
+    <ContentContext.Provider value={{ content, updateContent, resetContent, isSupabaseConfigured, isLoading }}>
       {children}
     </ContentContext.Provider>
   );
