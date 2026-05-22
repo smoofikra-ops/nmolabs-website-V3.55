@@ -3,6 +3,7 @@ import { SiteProvider, useSite } from './context/SiteContext';
 import { Header } from './components/Header';
 import { Hero } from './components/Hero';
 import { BookingModal } from './components/BookingModal';
+import { StickyCTA } from './components/StickyCTA';
 import { MouseParticles } from './components/MouseParticles';
 import { motion, useScroll, useSpring } from 'motion/react';
 import { ContentProvider, useContent } from './context/ContentContext';
@@ -176,6 +177,7 @@ function AppContent() {
 
       {/* Global Consult Booking Dialog */}
       <BookingModal />
+      <StickyCTA />
       
       {/* Visual Effects */}
       <MouseParticles />

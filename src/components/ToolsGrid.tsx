@@ -101,20 +101,20 @@ export const ToolsGrid = () => {
         <div className="flex flex-col md:flex-row gap-8 lg:gap-12 max-w-7xl mx-auto mb-32" id="tools-container">
           
           {/* Categories Sidebar */}
-          <div className="w-full md:w-1/3 lg:w-1/4 flex flex-col gap-3 shrink-0">
+          <div className="w-full md:w-1/3 lg:w-1/4 flex flex-col max-md:flex-row max-md:overflow-x-auto scrollbar-hide gap-3 shrink-0 max-md:pb-4 max-md:px-1">
             {config.toolCategories?.map((category, idx) => (
               <button
                 key={category.id || idx}
                 onClick={() => setOpenIndex(idx)}
-                className={`w-full text-right px-6 py-5 rounded-2xl flex items-center justify-between transition-all duration-300 border ${
+                className={`text-right px-6 py-5 rounded-2xl flex items-center justify-between transition-all duration-300 border shrink-0 max-md:whitespace-nowrap max-md:w-auto max-md:px-4 max-md:py-3 max-md:text-sm max-md:gap-3 ${
                   openIndex === idx 
                     ? 'bg-[color:var(--color-brand-blue-val)]/15 border-[color:var(--color-brand-blue-val)]/50 text-[color:var(--color-brand-green-val)] shadow-[inset_0_2px_8px_rgba(79,142,247,0.15)]' 
                     : 'bg-black/40 border-black shadow-[inset_0_4px_12px_rgba(0,0,0,0.8),0_1px_1px_rgba(255,255,255,0.05)] text-gray-400 hover:bg-black/60 hover:text-white hover:border-white/10'
                 }`}
               >
-                <span className={`font-bold text-lg ${openIndex === idx ? 'text-shadow-sm' : ''}`}>{category.title}</span>
-                <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${openIndex === idx ? 'bg-[color:var(--color-brand-blue-val)]/20' : 'bg-black/50 shadow-[inset_0_2px_4px_rgba(0,0,0,0.5)] border border-white/5'}`}>
-                  <IconMapper name={category.tools?.[0]?.iconName || 'Wrench'} className={`w-5 h-5 ${openIndex === idx ? 'text-[color:var(--color-brand-green-val)] drop-shadow-[0_0_5px_rgba(34,211,160,0.5)]' : 'opacity-60'}`} />
+                <span className={`font-bold text-lg max-md:text-sm ${openIndex === idx ? 'text-shadow-sm' : ''}`}>{category.title}</span>
+                <div className={`w-10 h-10 max-md:w-8 max-md:h-8 rounded-xl flex items-center justify-center ${openIndex === idx ? 'bg-[color:var(--color-brand-blue-val)]/20' : 'bg-black/50 shadow-[inset_0_2px_4px_rgba(0,0,0,0.5)] border border-white/5'}`}>
+                  <IconMapper name={category.tools?.[0]?.iconName || 'Wrench'} className={`w-5 h-5 max-md:w-4 max-md:h-4 ${openIndex === idx ? 'text-[color:var(--color-brand-green-val)] drop-shadow-[0_0_5px_rgba(34,211,160,0.5)]' : 'opacity-60'}`} />
                 </div>
               </button>
             ))}

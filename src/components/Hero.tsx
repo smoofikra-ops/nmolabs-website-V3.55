@@ -60,9 +60,19 @@ export const Hero = () => {
   const [showModal, setShowModal] = useState(false);
   const [analysisResults, setAnalysisResults] = useState<any>(null);
   const [shouldLoadVideo, setShouldLoadVideo] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const heroRef = useRef<HTMLElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const isInView = useInView(heroRef, { margin: "200px" });
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   useEffect(() => {
     const t = setTimeout(() => setShouldLoadVideo(true), 2500); 
@@ -171,7 +181,7 @@ export const Hero = () => {
               poster={config.heroVideoPoster || undefined}
               className="absolute inset-0 w-full h-full object-cover mix-blend-screen opacity-50 md:opacity-50 transition-opacity duration-1000"
               style={{ opacity: isInView ? 0.5 : 0 }}
-              src={isInView && shouldLoadVideo ? heroContent.videoUrl : undefined} 
+              src={isInView && shouldLoadVideo && !isMobile ? heroContent.videoUrl : undefined} 
             />
             {/* Mobile Video Overlay for readability */}
             <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/40 to-black/80 z-[1] md:hidden pointer-events-none" />
@@ -194,7 +204,7 @@ export const Hero = () => {
             playsInline 
             preload="none"
             className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-            src={isInView && shouldLoadVideo ? config.heroThumbVideoUrl : undefined} 
+            src={isInView && shouldLoadVideo && !isMobile ? config.heroThumbVideoUrl : undefined} 
           />
           <div className="absolute inset-0 bg-black/20 group-hover:bg-black/0 transition-colors" />
         </motion.div>
@@ -285,13 +295,13 @@ export const Hero = () => {
 
           <div className="max-w-xl mx-auto md:ml-auto md:mr-12 relative group z-20">
             <div className={`absolute -inset-1 rounded-2xl blur opacity-70 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-pulse`} style={{ background: `linear-gradient(90deg, ${config.primaryColor}, ${config.accentColor}, ${config.primaryColor})`, backgroundSize: '200% 100%' }}></div>
-            <div className="relative flex items-center bg-[color:var(--color-brand-dark)] backdrop-blur-xl border-2 border-transparent rounded-2xl p-1.5 md:p-2 md:pl-2 shadow-2xl transition-all duration-300 focus-within:border-[color:var(--color-brand-blue-val)]">
+            <div className="relative flex flex-row max-sm:flex-col items-center max-sm:items-stretch bg-[color:var(--color-brand-dark)] backdrop-blur-xl border-2 border-transparent rounded-2xl p-1.5 md:p-2 md:pl-2 max-sm:gap-2 shadow-2xl transition-all duration-300 focus-within:border-[color:var(--color-brand-blue-val)]">
               <input 
                 type="url" 
                 value={url}
                 onChange={(e) => setUrl(e.target.value)}
                 placeholder="https://yourstore.com"
-                className="flex-1 bg-transparent border-none outline-none text-white px-3 md:px-4 font-english text-sm md:text-lg placeholder-[color:var(--color-text-muted)] text-left w-full focus:ring-0 min-w-0"
+                className="flex-1 bg-transparent border-none outline-none text-white px-3 md:px-4 font-english text-sm md:text-lg placeholder-[color:var(--color-text-muted)] text-left w-full focus:ring-0 min-w-0 max-sm:py-3"
                 dir="ltr"
                 disabled={isScanning}
                 onKeyDown={(e) => {
@@ -301,7 +311,7 @@ export const Hero = () => {
               <button
                 onClick={handleScan}
                 disabled={isScanning || !url}
-                className="shrink-0 flex items-center justify-center gap-1.5 md:gap-2 h-12 md:h-14 px-5 md:px-8 rounded-xl font-bold text-sm md:text-lg text-white transition-all duration-300 disabled:opacity-50 relative overflow-hidden shadow-[0_0_20px_rgba(79,142,247,0.5)] hover:shadow-[0_0_30px_rgba(79,142,247,0.8)] hover:animate-pulse hover:scale-105"
+                className="shrink-0 flex items-center justify-center gap-1.5 md:gap-2 h-12 md:h-14 px-5 md:px-8 rounded-xl font-bold text-sm md:text-lg text-white transition-all duration-300 disabled:opacity-50 relative overflow-hidden shadow-[0_0_20px_rgba(79,142,247,0.5)] hover:shadow-[0_0_30px_rgba(79,142,247,0.8)] hover:animate-pulse hover:scale-105 max-sm:w-full"
                 style={{ backgroundColor: config.primaryColor }}
               >
                 {isScanning ? (

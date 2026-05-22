@@ -48,7 +48,17 @@ export const Services = () => {
   const services = content.services || [];
   
   const [openId, setOpenId] = useState<string | null>(null);
+  const [isMobile, setIsMobile] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
+
+  React.useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
   
   const { scrollYProgress } = useScroll({
     target: sectionRef,
@@ -109,7 +119,7 @@ export const Services = () => {
             return (
               <motion.div
                 key={service.id}
-                style={{ y: index % 3 === 0 ? y1 : index % 3 === 1 ? y2 : y3 }}
+                style={{ y: isMobile ? 0 : (index % 3 === 0 ? y1 : index % 3 === 1 ? y2 : y3) }}
               >
                 <motion.div 
                   initial={{ opacity: 0, scale: 0.9 }}
