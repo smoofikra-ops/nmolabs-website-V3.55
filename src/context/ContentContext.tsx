@@ -275,6 +275,70 @@ export const defaultContent: SiteContent = {
       resultText: "زيادة ملحوظة في المبيعات وتفاعل فائق مع العملاء عبر السوشيال ميديا وقنوات الإعلان.",
       growthPercentage: "+120%",
       brandColor: "#22b6ed"
+    },
+    {
+      id: "story_5",
+      storeName: "الأجهزة المبتكرة",
+      logoUrl: "https://l.top4top.io/p_37931425f1.jpeg",
+      resultText: "زيادة استثنائية في مبيعات التجزئة للمنتجات التقنية المبتكرة والذكية.",
+      growthPercentage: "+180%",
+      brandColor: "#22b6ed"
+    },
+    {
+      id: "story_6",
+      storeName: "صفقات كوم - كوزماتيكس",
+      logoUrl: "https://cdn.salla.sa/cdn-cgi/image/fit=scale-down,width=400,height=400,onerror=redirect,format=auto/XedRZA/cj1Pe64zjrLLb2oZlgPVEkCSN6cbs99eoR39wPLK.png",
+      resultText: "مضاعفة معدل مبيعات الجملة والتجزئة وتسهيل عمليات التقسيط لجميع الأصناف.",
+      growthPercentage: "+240%",
+      brandColor: "#de9336"
+    },
+    {
+      id: "story_7",
+      storeName: "Rayflow Studio - ورشات عمل",
+      logoUrl: "https://b.top4top.io/p_3793wzzmw2.jpeg",
+      resultText: "توسيع نطاق حضور الورش التعليمية ومضاعفة معدلات تحويل المشتركين.",
+      growthPercentage: "+150%",
+      brandColor: "#f5abc5"
+    },
+    {
+      id: "story_8",
+      storeName: "مناديل حصة",
+      logoUrl: "https://c.top4top.io/p_3793bl49n4.jpeg",
+      resultText: "مضاعفة الحضور الرقمي وزيادة مبيعات قنوات التوزيع بنسبة ملحوظة.",
+      growthPercentage: "+190%",
+      brandColor: "#414798"
+    },
+    {
+      id: "story_9",
+      storeName: "بولي مارت - مصنع بلاستيك",
+      logoUrl: "https://b.top4top.io/p_3793iv69z3.jpeg",
+      resultText: "تطوير طلبات الجملة للشركات وتسهيل مسارات التعاقد الصناعي بفعالية.",
+      growthPercentage: "+110%",
+      brandColor: "#0e316c"
+    },
+    {
+      id: "story_10",
+      storeName: "شركة مقاولات",
+      logoUrl: "https://a.top4top.io/p_3793yww4d1.jpeg",
+      resultText: "تعزيز استقطاب عملاء المشاريع الكبرى وبناء الهوية الرقمية للمجموعة.",
+      growthPercentage: "+85%",
+      brandColor: "#fdb700"
+    },
+    {
+      id: "story_11",
+      storeName: "نقوش دعاية وإعلان",
+      logoUrl: "https://i.top4top.io/p_3793a3ygj9.jpeg",
+      resultText: "نمو فائق في إدارة طلبات المطبوعات والتصميم الخارجي للعلامات التجارية.",
+      growthPercentage: "+130%",
+      brandColor: "#0e316c"
+    },
+    {
+      id: "story_12",
+      storeName: "ديبنو للتسويق Diinpo",
+      logoUrl: "https://d.top4top.io/p_37934ndey5.jpeg",
+      resultText: "إطلاق حملات ذكية مبنية على البيانات ومضاعفة مبيعات المتاجر الشريكة.",
+      growthPercentage: "+320%",
+      brandColor: "#fb6700"
     }
   ]
 };

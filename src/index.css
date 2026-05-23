@@ -49,9 +49,29 @@
   --glass-panel-bg: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.5) 100%);
 }
 
-@keyframes marquee {
+@keyframes marquee-rtl {
   0% { transform: translateX(0%); }
   100% { transform: translateX(-50%); } 
+}
+
+@keyframes marquee-ltr {
+  0% { transform: translateX(-50%); }
+  100% { transform: translateX(0%); } 
+}
+
+.partner-card-glow {
+  transition: all 0.3s ease-in-out;
+  box-shadow: 
+    0 0 10px color-mix(in srgb, var(--partner-color) 20%, transparent),
+    inset 0 0 5px color-mix(in srgb, var(--partner-color) 15%, transparent);
+}
+
+.partner-card-glow:hover {
+  border-color: var(--partner-color) !important;
+  box-shadow: 
+    0 0 18px color-mix(in srgb, var(--partner-color) 35%, transparent),
+    0 0 40px color-mix(in srgb, var(--partner-color) 18%, transparent),
+    inset 0 0 10px color-mix(in srgb, var(--partner-color) 25%, transparent) !important;
 }
 
 @keyframes glow {
