@@ -186,13 +186,12 @@ export const Hero = () => {
               muted 
               playsInline 
               preload="metadata"
-              poster={config.heroVideoPoster || undefined}
-              className="absolute inset-0 w-full h-full object-cover mix-blend-screen opacity-40 transition-opacity duration-1000"
-              style={{ opacity: isInView ? 0.4 : 0 }}
-              src={isInView && shouldLoadVideo ? heroContent.videoUrl : undefined} 
+              poster={config.heroVideoPoster || "https://l.top4top.io/p_37931425f1.jpeg" || undefined}
+              className="absolute inset-0 w-full h-full object-cover opacity-50 md:opacity-40 transition-opacity duration-1000 pointer-events-none"
+              src={heroContent.videoUrl} 
             />
             {/* Mobile Video Overlay for readability */}
-            <div className="absolute inset-0 bg-black/55 z-[1] md:hidden pointer-events-none" />
+            <div className="absolute inset-0 bg-black/60 z-[1] md:hidden pointer-events-none" />
           </>
         )}
       </ParallaxBackground>
@@ -278,26 +277,32 @@ export const Hero = () => {
           </p>
 
           <div className="flex md:grid md:grid-cols-3 overflow-x-auto md:overflow-x-visible snap-x snap-mandatory scrollbar-hide gap-4 md:gap-6 mb-12 md:mb-16 max-w-5xl mx-auto w-full px-2">
-            <div className="snap-center shrink-0 w-[85vw] md:w-auto p-6 md:p-8 rounded-3xl border border-white/10 bg-black/40 text-center flex flex-col items-center justify-center transform hover:-translate-y-1 hover:scale-105 transition-all duration-300 shadow-[inset_0_4px_12px_rgba(0,0,0,0.8),0_1px_1px_rgba(255,255,255,0.05)] cursor-default">
-              <div className="w-14 h-14 md:w-16 md:h-16 rounded-2xl bg-black/50 shadow-[inset_0_2px_8px_rgba(0,0,0,0.9),0_1px_0_rgba(255,255,255,0.05)] border border-black flex items-center justify-center mb-4 md:mb-5 mx-auto">
+            <div className="snap-center shrink-0 w-[80vw] md:w-auto p-4 md:p-8 rounded-2xl md:rounded-3xl border border-white/10 bg-black/50 md:bg-black/40 flex flex-row md:flex-col items-center md:justify-center gap-4 md:gap-5 transition-all duration-300 shadow-[inset_0_4px_12px_rgba(0,0,0,0.8),0_1px_1px_rgba(255,255,255,0.05)] hover:border-[#2bc2c2]/30 hover:shadow-[0_0_20px_rgba(43,194,194,0.1),inset_0_4px_12px_rgba(0,0,0,0.8)] cursor-default">
+              <div className="w-12 h-12 md:w-16 md:h-16 rounded-xl md:rounded-2xl bg-black/50 shadow-[inset_0_2px_8px_rgba(0,0,0,0.9),0_1px_0_rgba(255,255,255,0.05)] border border-black flex items-center justify-center shrink-0">
                 <Users className="w-6 h-6 md:w-8 md:h-8 text-[color:var(--color-brand-blue-val)] drop-shadow-[0_0_8px_rgba(79,142,247,0.5)]" />
               </div>
-              <h3 className="text-lg md:text-xl font-bold text-white mb-2 md:mb-3 text-shadow-sm">الزوار يدخلون... وما يشترون</h3>
-              <p className="text-[#9ca3af] text-xs md:text-sm leading-relaxed max-w-[250px] md:max-w-none mx-auto">معدل التحويل منخفض والعملاء يطلعون بدون شراء</p>
+              <div className="text-right md:text-center flex-1 md:flex-none">
+                <h3 className="text-sm md:text-lg font-bold text-white mb-1 md:mb-3 text-shadow-sm">الزوار يدخلون... وما يشترون</h3>
+                <p className="text-[#9ca3af] text-[11px] md:text-sm leading-relaxed max-w-[200px] md:max-w-none">معدل التحويل منخفض والعملاء يطلعون بدون شراء</p>
+              </div>
             </div>
-            <div className="snap-center shrink-0 w-[85vw] md:w-auto p-6 md:p-8 rounded-3xl border border-white/10 bg-black/40 text-center flex flex-col items-center justify-center transform hover:-translate-y-1 hover:scale-105 transition-all duration-300 shadow-[inset_0_4px_12px_rgba(0,0,0,0.8),0_1px_1px_rgba(255,255,255,0.05)] cursor-default">
-              <div className="w-14 h-14 md:w-16 md:h-16 rounded-2xl bg-black/50 shadow-[inset_0_2px_8px_rgba(0,0,0,0.9),0_1px_0_rgba(255,255,255,0.05)] border border-black flex items-center justify-center mb-4 md:mb-5 mx-auto">
+            <div className="snap-center shrink-0 w-[80vw] md:w-auto p-4 md:p-8 rounded-2xl md:rounded-3xl border border-white/10 bg-black/50 md:bg-black/40 flex flex-row md:flex-col items-center md:justify-center gap-4 md:gap-5 transition-all duration-300 shadow-[inset_0_4px_12px_rgba(0,0,0,0.8),0_1px_1px_rgba(255,255,255,0.05)] hover:border-[#2bc2c2]/30 hover:shadow-[0_0_20px_rgba(43,194,194,0.1),inset_0_4px_12px_rgba(0,0,0,0.8)] cursor-default">
+              <div className="w-12 h-12 md:w-16 md:h-16 rounded-xl md:rounded-2xl bg-black/50 shadow-[inset_0_2px_8px_rgba(0,0,0,0.9),0_1px_0_rgba(255,255,255,0.05)] border border-black flex items-center justify-center shrink-0">
                 <Target className="w-6 h-6 md:w-8 md:h-8 text-[color:var(--color-brand-blue-val)] drop-shadow-[0_0_8px_rgba(79,142,247,0.5)]" />
               </div>
-              <h3 className="text-lg md:text-xl font-bold text-white mb-2 md:mb-3 text-shadow-sm">العميل يتردد... ويطلع</h3>
-              <p className="text-[#9ca3af] text-xs md:text-sm leading-relaxed max-w-[250px] md:max-w-none mx-auto">مشاكل في تجربة المستخدم تخلي العميل يشك ويترك المتجر</p>
+              <div className="text-right md:text-center flex-1 md:flex-none">
+                <h3 className="text-sm md:text-lg font-bold text-white mb-1 md:mb-3 text-shadow-sm">العميل يتردد... ويطلع</h3>
+                <p className="text-[#9ca3af] text-[11px] md:text-sm leading-relaxed max-w-[200px] md:max-w-none">مشاكل في تجربة المستخدم تخلي العميل يشك ويترك المتجر</p>
+              </div>
             </div>
-            <div className="snap-center shrink-0 w-[85vw] md:w-auto p-6 md:p-8 rounded-3xl border border-white/10 bg-black/40 text-center flex flex-col items-center justify-center transform hover:-translate-y-1 hover:scale-105 transition-all duration-300 shadow-[inset_0_4px_12px_rgba(0,0,0,0.8),0_1px_1px_rgba(255,255,255,0.05)] cursor-default">
-              <div className="w-14 h-14 md:w-16 md:h-16 rounded-2xl bg-black/50 shadow-[inset_0_2px_8px_rgba(0,0,0,0.9),0_1px_0_rgba(255,255,255,0.05)] border border-black flex items-center justify-center mb-4 md:mb-5 mx-auto">
+            <div className="snap-center shrink-0 w-[80vw] md:w-auto p-4 md:p-8 rounded-2xl md:rounded-3xl border border-white/10 bg-black/50 md:bg-black/40 flex flex-row md:flex-col items-center md:justify-center gap-4 md:gap-5 transition-all duration-300 shadow-[inset_0_4px_12px_rgba(0,0,0,0.8),0_1px_1px_rgba(255,255,255,0.05)] hover:border-[#2bc2c2]/30 hover:shadow-[0_0_20px_rgba(43,194,194,0.1),inset_0_4px_12px_rgba(0,0,0,0.8)] cursor-default">
+              <div className="w-12 h-12 md:w-16 md:h-16 rounded-xl md:rounded-2xl bg-black/50 shadow-[inset_0_2px_8px_rgba(0,0,0,0.9),0_1px_0_rgba(255,255,255,0.05)] border border-black flex items-center justify-center shrink-0">
                 <TrendingUp className="w-6 h-6 md:w-8 md:h-8 text-[color:var(--color-brand-blue-val)] drop-shadow-[0_0_8px_rgba(79,142,247,0.5)]" />
               </div>
-              <h3 className="text-lg md:text-xl font-bold text-white mb-2 md:mb-3 text-shadow-sm">تصرف على الإعلانات... بدون نتيجة</h3>
-              <p className="text-[#9ca3af] text-xs md:text-sm leading-relaxed max-w-[250px] md:max-w-none mx-auto">ميزانية إعلانات عالية لكن المبيعات ما ترتفع</p>
+              <div className="text-right md:text-center flex-1 md:flex-none">
+                <h3 className="text-sm md:text-lg font-bold text-white mb-1 md:mb-3 text-shadow-sm">تصرف على الإعلانات... بدون نتيجة</h3>
+                <p className="text-[#9ca3af] text-[11px] md:text-sm leading-relaxed max-w-[200px] md:max-w-none">ميزانية إعلانات عالية لكن المبيعات ما ترتفع</p>
+              </div>
             </div>
           </div>
 
@@ -339,14 +344,14 @@ export const Hero = () => {
             </div>
 
             {/* Mobile Version (Independent Input & Centered Gradient Button Underneath) */}
-            <div className="flex md:hidden flex-col gap-4 w-full px-2">
-              <div className="relative rounded-2xl p-[1px] bg-black/40 border border-white/10 shadow-[inset_0_2px_4px_rgba(0,0,0,0.5)]">
+            <div className="flex md:hidden flex-col gap-3.5 w-full max-w-sm mx-auto px-4">
+              <div className="relative rounded-xl bg-black/50 border border-white/10 shadow-[inset_0_2px_6px_rgba(0,0,0,0.7)]">
                 <input 
                   type="url" 
                   value={url}
                   onChange={(e) => setUrl(e.target.value)}
                   placeholder="https://yourstore.com"
-                  className="w-full bg-transparent border-none outline-none text-white px-4 py-4 rounded-2xl font-english text-base placeholder-[color:var(--color-text-muted)] text-center focus:ring-0 focus:ring-offset-0 focus:border-transparent"
+                  className="w-full bg-transparent border-none outline-none text-white px-4 py-2.5 rounded-xl font-english text-sm placeholder-[color:var(--color-text-muted)] text-center focus:ring-0 focus:ring-offset-0 focus:border-transparent"
                   dir="ltr"
                   disabled={isScanning}
                   onKeyDown={(e) => {
@@ -357,10 +362,10 @@ export const Hero = () => {
               <button
                 onClick={handleScan}
                 disabled={isScanning || !url}
-                className="w-full py-4 rounded-2xl font-bold text-base text-white transition-all duration-300 flex items-center justify-center gap-2 relative overflow-hidden shadow-lg border border-white/10 active:scale-95 active:brightness-110"
+                className="w-full py-3 rounded-xl font-bold text-sm text-white transition-all duration-300 flex items-center justify-center gap-2 relative overflow-hidden shadow-lg border border-white/10 active:scale-95 active:brightness-110"
                 style={{ 
                   background: `linear-gradient(135deg, ${config.primaryColor} 0%, ${config.accentColor} 100%)`,
-                  boxShadow: `0 4px 20px ${config.primaryColor}40`
+                  boxShadow: `0 0 15px ${config.primaryColor}50`
                 }}
               >
                 {isScanning ? (

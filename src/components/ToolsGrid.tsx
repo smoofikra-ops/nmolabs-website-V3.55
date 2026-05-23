@@ -107,6 +107,17 @@ export const ToolsGrid = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
   const categoriesRef = useRef<HTMLDivElement>(null);
+  const [isMobile, setIsMobile] = useState(false);
+  const [expandedPackageIdx, setExpandedPackageIdx] = useState<number | null>(1); // default to popular package (1)
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   // Auto-scroll mobile marquee effect
   useEffect(() => {
@@ -230,57 +241,63 @@ export const ToolsGrid = () => {
                     <p className="text-gray-400">تشخيص وتطوير أداء متجرك من كل زاوية باستخدام أفضل الأدوات.</p>
                   </div>
                   
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {config.toolCategories[openIndex || 0].tools.map((tool, i) => {
-                      const theme = getToolTheme(i, tool.locked);
-                      return (
-                        <div 
-                          key={i} 
-                          onClick={() => {
-                            setSelectedTool(tool);
-                            setIsModalOpen(true);
-                          }}
-                          tabIndex={0}
-                          className={`relative p-8 rounded-3xl flex flex-col justify-between transition-all duration-300 group/tooltip group/card min-h-[160px] cursor-pointer focus:outline-none focus:ring-2 focus:ring-[color:var(--color-brand-blue-val)]/50 bg-black/50 border ${theme.border} ${theme.glow}`}
-                        >
-                          {/* Tooltip */}
-                          <div className="absolute -top-16 left-1/2 -translate-x-1/2 opacity-0 group-hover/tooltip:opacity-100 group-focus-within/tooltip:opacity-100 transition-all duration-300 pointer-events-none z-50 transform group-hover/tooltip:-translate-y-2 group-focus-within/tooltip:-translate-y-2 w-max max-w-xs">
-                            <div className="bg-[color:var(--bg-color-darker)] backdrop-blur text-[color:var(--color-text-main)] p-3 rounded-xl shadow-xl border border-[color:var(--glass-border)] text-right">
-                              <h5 className="font-bold text-sm mb-1 text-[color:var(--color-brand-blue-val)]">{tool.name}</h5>
-                              <p className="text-xs text-[color:var(--color-text-muted)] whitespace-normal leading-relaxed">{getToolDescription(tool.name)}</p>
-                            </div>
-                          </div>
-
-                          <div className="flex items-start justify-between mb-6 relative z-10">
-                            <div>
-                              <h4 className="font-bold text-lg text-white mb-1 group-hover/card:text-[color:var(--color-brand-blue-val)] transition-colors">{tool.name}</h4>
-                              <p className="text-sm text-gray-500">أداة مساعدة مخصصة</p>
-                            </div>
-                            <div className={`w-14 h-14 rounded-2xl ${theme.iconBg} flex items-center justify-center transition-transform duration-300 group-hover/card:scale-110`}>
-                              <IconMapper name={tool.iconName} className={`w-7 h-7 ${theme.iconColor} transition-colors`} />
-                            </div>
-                          </div>
-
-                          <div className="flex items-center justify-between mt-auto">
-                            {tool.locked ? (
-                              <div className="flex items-center gap-1.5 text-xs text-[#7c3aed] bg-[#7c3aed]/10 border border-[#7c3aed]/20 px-3 py-1.5 rounded-full font-bold shadow-sm">
-                                <Lock size={12} />
-                                <span>مدفوعة</span>
-                              </div>
-                            ) : (
-                              <div className="flex items-center gap-1.5 text-xs text-[#22d3a0] bg-[#22d3a0]/10 border border-[#22d3a0]/20 px-3 py-1.5 rounded-full font-bold shadow-sm">
-                                <Zap size={12} />
-                                <span>أداة مجانية</span>
+                  <div className="bg-black/30 border border-white/10 rounded-3xl p-6 max-md:p-4 shadow-inner">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      {config.toolCategories[openIndex || 0].tools.map((tool, i) => {
+                        const theme = getToolTheme(i, tool.locked);
+                        return (
+                          <div 
+                            key={i} 
+                            onClick={() => {
+                              setSelectedTool(tool);
+                              setIsModalOpen(true);
+                            }}
+                            tabIndex={0}
+                            className={`relative p-8 rounded-3xl flex flex-col justify-between transition-all duration-300 group/tooltip group/card min-h-[160px] cursor-pointer focus:outline-none focus:ring-2 focus:ring-[color:var(--color-brand-blue-val)]/50 bg-black/50 border ${theme.border} ${theme.glow}`}
+                          >
+                            {/* Tooltip on Desktop only */}
+                            {!isMobile && (
+                              <div className="absolute -top-16 left-1/2 -translate-x-1/2 opacity-0 group-hover/tooltip:opacity-100 group-focus-within/tooltip:opacity-100 transition-all duration-300 pointer-events-none z-50 transform group-hover/tooltip:-translate-y-2 group-focus-within/tooltip:-translate-y-2 w-max max-w-xs">
+                                <div className="bg-[color:var(--bg-color-darker)] backdrop-blur text-[color:var(--color-text-main)] p-3 rounded-xl shadow-xl border border-[color:var(--glass-border)] text-right">
+                                  <h5 className="font-bold text-sm mb-1 text-[color:var(--color-brand-blue-val)]">{tool.name}</h5>
+                                  <p className="text-xs text-[color:var(--color-text-muted)] whitespace-normal leading-relaxed">{getToolDescription(tool.name)}</p>
+                                </div>
                               </div>
                             )}
-                            
-                            <div className="w-8 h-8 rounded-full flex items-center justify-center bg-white/5 opacity-0 group-hover/card:opacity-100 transition-opacity text-white">
-                              {tool.locked ? <Lock size={14} /> : <Zap size={14} />}
+
+                            <div className="flex items-start justify-between mb-6 relative z-10 gap-3">
+                              <div className="flex-1">
+                                <h4 className="font-bold text-base md:text-lg text-white mb-1 group-hover/card:text-[color:var(--color-brand-blue-val)] transition-colors">{tool.name}</h4>
+                                <p className="text-xs text-gray-400 font-light mt-1.5 leading-relaxed">
+                                  {getToolDescription(tool.name)}
+                                </p>
+                              </div>
+                              <div className={`w-12 h-12 rounded-xl ${theme.iconBg} flex items-center justify-center transition-transform duration-300 group-hover/card:scale-110 shrink-0`}>
+                                <IconMapper name={tool.iconName} className={`w-6 h-6 ${theme.iconColor} transition-colors`} />
+                              </div>
+                            </div>
+
+                            <div className="flex items-center justify-between mt-auto">
+                              {tool.locked ? (
+                                <div className="flex items-center gap-1.5 text-xs text-[#7c3aed] bg-[#7c3aed]/10 border border-[#7c3aed]/20 px-3 py-1.5 rounded-full font-bold shadow-sm">
+                                  <Lock size={12} />
+                                  <span>مدفوعة</span>
+                                </div>
+                              ) : (
+                                <div className="flex items-center gap-1.5 text-xs text-[#22d3a0] bg-[#22d3a0]/10 border border-[#22d3a0]/20 px-3 py-1.5 rounded-full font-bold shadow-sm">
+                                  <Zap size={12} />
+                                  <span>أداة مجانية</span>
+                                </div>
+                              )}
+                              
+                              <div className="w-8 h-8 rounded-full flex items-center justify-center bg-white/5 opacity-0 group-hover/card:opacity-100 transition-opacity text-white">
+                                {tool.locked ? <Lock size={14} /> : <Zap size={14} />}
+                              </div>
                             </div>
                           </div>
-                        </div>
-                      );
-                    })}
+                        );
+                      })}
+                    </div>
                   </div>
                 </motion.div>
               )}
@@ -295,61 +312,134 @@ export const ToolsGrid = () => {
             <p className="text-gray-400">اختر الباقة التي تناسب حجم نشاطك</p>
           </div>
           
-          <div className="flex md:grid md:grid-cols-2 lg:grid-cols-4 overflow-x-auto md:overflow-x-visible snap-x snap-mandatory scrollbar-hide gap-8 pb-4 w-full px-2">
-            {pricingPackages.map((pkg, i) => (
-              <motion.div
-                key={i}
-                id={`package-${i}`}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.1 }}
-                className={`snap-center shrink-0 w-[85vw] md:w-auto bg-black/40 relative rounded-3xl p-8 border ${pkg.popular ? 'border-[color:var(--color-brand-blue-val)] shadow-[0_0_30px_rgba(79,142,247,0.15)] transform md:-translate-y-4' : 'border-[color:var(--glass-border)] shadow-[inset_0_4px_12px_rgba(0,0,0,0.8),0_1px_1px_rgba(255,255,255,0.05)]'} flex flex-col h-full`}
-              >
-                {pkg.popular && (
-                  <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 px-4 py-1 bg-[color:var(--color-brand-blue-val)] text-white text-xs font-bold rounded-full">
-                    الأكثر طلباً
+          {isMobile ? (
+            <div className="flex flex-col gap-4 w-full px-2">
+              {pricingPackages.map((pkg, i) => {
+                const isExpanded = expandedPackageIdx === i;
+                return (
+                  <div 
+                    key={i}
+                    className={`bg-black/50 border rounded-2xl overflow-hidden transition-all duration-300 ${isExpanded ? 'border-[color:var(--color-brand-blue-val)] shadow-[0_0_20px_rgba(79,142,247,0.15)]' : 'border-white/10'}`}
+                  >
+                    {/* Accordion Trigger Header */}
+                    <button
+                      onClick={() => setExpandedPackageIdx(isExpanded ? null : i)}
+                      className="w-full flex items-center justify-between p-5 text-right cursor-pointer"
+                    >
+                      <div className="flex flex-col gap-1">
+                        <div className="flex items-center gap-2">
+                          <h3 className="font-bold text-base text-white">{pkg.name}</h3>
+                          {pkg.popular && (
+                            <span className="text-[9px] font-bold px-2 py-0.5 bg-[color:var(--color-brand-blue-val)]/25 text-[color:var(--color-brand-blue-val)] rounded-full border border-[color:var(--color-brand-blue-val)]/30">الأكثر طلبًا</span>
+                          )}
+                        </div>
+                        <span className="text-[11px] text-gray-400 font-light text-right">{pkg.desc}</span>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <div className="flex flex-col items-end font-english" dir="ltr">
+                          <span className="text-sm font-black text-white">{pkg.price} {pkg.currency}</span>
+                          <span className="text-[9px] text-gray-500">{pkg.period}</span>
+                        </div>
+                        <motion.div
+                          animate={{ rotate: isExpanded ? 180 : 0 }}
+                          transition={{ duration: 0.2 }}
+                          className="text-gray-400 shrink-0"
+                        >
+                          <ChevronDown size={20} />
+                        </motion.div>
+                      </div>
+                    </button>
+
+                    {/* Accordion Content */}
+                    <AnimatePresence initial={false}>
+                      {isExpanded && (
+                        <motion.div
+                          initial={{ height: 0, opacity: 0 }}
+                          animate={{ height: 'auto', opacity: 1 }}
+                          exit={{ height: 0, opacity: 0 }}
+                          transition={{ duration: 0.2 }}
+                          className="border-t border-white/5 bg-black/20"
+                        >
+                          <div className="p-5 space-y-4">
+                            <div className="space-y-3">
+                              {pkg.features.map((feat, fi) => (
+                                <div key={fi} className="flex items-start gap-2.5">
+                                  <CheckCircle2 className="w-4 h-4 text-[color:var(--color-brand-blue-val)] shrink-0 mt-0.5" />
+                                  <span className="text-xs text-gray-300 font-light">{feat}</span>
+                                </div>
+                              ))}
+                            </div>
+                            <button 
+                              onClick={() => triggerBookingModal(pkg.buttonLabel.includes('تواصل') || pkg.contactLink ? 'استشارة عامة' : `باقة الأسعار - ${pkg.name}`)}
+                              className="w-full py-3.5 rounded-xl font-bold text-xs text-white bg-gradient-to-r from-brand-blue to-brand-purple hover:shadow-[0_0_20px_rgba(79,142,247,0.4)] transition-all cursor-pointer text-center border-none"
+                            >
+                              {pkg.buttonLabel}
+                            </button>
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
                   </div>
-                )}
-                
-                <h3 className="text-xl font-bold mb-2 text-white">{pkg.name}</h3>
-                <p className="text-sm text-gray-400 mb-6 min-h-[40px]">{pkg.desc}</p>
-                
-                <div className="mb-8 font-english" dir="ltr">
-                  <span className="text-4xl font-black text-white">{pkg.price}</span>
-                  <span className="text-xl text-gray-400 ml-1">{pkg.currency}</span>
-                  <span className="text-sm text-gray-500 ml-1 block mt-1">{pkg.period}</span>
-                </div>
-                
-                <div className="space-y-4 mb-8 flex-1">
-                  {pkg.features.map((feat, fi) => (
-                    <div key={fi} className="flex items-start gap-3">
-                      <CheckCircle2 className="w-5 h-5 shrink-0" style={{ color: pkg.color }} />
-                      <span className="text-sm text-gray-300">{feat}</span>
-                    </div>
-                  ))}
-                </div>
-                
-                <button 
-                  onClick={() => triggerBookingModal(pkg.buttonLabel.includes('تواصل') || pkg.contactLink ? 'استشارة عامة' : `باقة الأسعار - ${pkg.name}`)}
-                  className="w-full py-4 rounded-xl font-bold transition-all duration-300 flex items-center justify-center text-center cursor-pointer"
-                  style={{ 
-                    backgroundColor: pkg.popular ? pkg.color : 'rgba(255,255,255,0.05)',
-                    color: pkg.popular ? '#fff' : pkg.color,
-                    border: pkg.popular ? 'none' : `1px solid ${pkg.color}40`
-                  }}
-                  onMouseEnter={(e) => {
-                    if (!pkg.popular) e.currentTarget.style.backgroundColor = `${pkg.color}15`;
-                  }}
-                  onMouseLeave={(e) => {
-                    if (!pkg.popular) e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.05)';
-                  }}
+                );
+              })}
+            </div>
+          ) : (
+            <div className="flex md:grid md:grid-cols-2 lg:grid-cols-4 overflow-x-auto md:overflow-x-visible snap-x snap-mandatory scrollbar-hide gap-8 pb-4 w-full px-2">
+              {pricingPackages.map((pkg, i) => (
+                <motion.div
+                  key={i}
+                  id={`package-${i}`}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.1 }}
+                  className={`snap-center shrink-0 w-[85vw] md:w-auto bg-black/40 relative rounded-3xl p-8 border ${pkg.popular ? 'border-[color:var(--color-brand-blue-val)] shadow-[0_0_30px_rgba(79,142,247,0.15)] transform md:-translate-y-4' : 'border-[color:var(--glass-border)] shadow-[inset_0_4px_12px_rgba(0,0,0,0.8),0_1px_1px_rgba(255,255,255,0.05)]'} flex flex-col h-full`}
                 >
-                  {pkg.buttonLabel}
-                </button>
-              </motion.div>
-            ))}
-          </div>
+                  {pkg.popular && (
+                    <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 px-4 py-1 bg-[color:var(--color-brand-blue-val)] text-white text-xs font-bold rounded-full">
+                      الأكثر طلباً
+                    </div>
+                  )}
+                  
+                  <h3 className="text-xl font-bold mb-2 text-white">{pkg.name}</h3>
+                  <p className="text-sm text-gray-400 mb-6 min-h-[40px]">{pkg.desc}</p>
+                  
+                  <div className="mb-8 font-english" dir="ltr">
+                    <span className="text-4xl font-black text-white">{pkg.price}</span>
+                    <span className="text-xl text-gray-400 ml-1">{pkg.currency}</span>
+                    <span className="text-sm text-gray-500 ml-1 block mt-1">{pkg.period}</span>
+                  </div>
+                  
+                  <div className="space-y-4 mb-8 flex-1">
+                    {pkg.features.map((feat, fi) => (
+                      <div key={fi} className="flex items-start gap-3">
+                        <CheckCircle2 className="w-5 h-5 shrink-0" style={{ color: pkg.color }} />
+                        <span className="text-sm text-gray-300">{feat}</span>
+                      </div>
+                    ))}
+                  </div>
+                  
+                  <button 
+                    onClick={() => triggerBookingModal(pkg.buttonLabel.includes('تواصل') || pkg.contactLink ? 'استشارة عامة' : `باقة الأسعار - ${pkg.name}`)}
+                    className="w-full py-4 rounded-xl font-bold transition-all duration-300 flex items-center justify-center text-center cursor-pointer"
+                    style={{ 
+                      backgroundColor: pkg.popular ? pkg.color : 'rgba(255,255,255,0.05)',
+                      color: pkg.popular ? '#fff' : pkg.color,
+                      border: pkg.popular ? 'none' : `1px solid ${pkg.color}40`
+                    }}
+                    onMouseEnter={(e) => {
+                      if (!pkg.popular) e.currentTarget.style.backgroundColor = `${pkg.color}15`;
+                    }}
+                    onMouseLeave={(e) => {
+                      if (!pkg.popular) e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.05)';
+                    }}
+                  >
+                    {pkg.buttonLabel}
+                  </button>
+                </motion.div>
+              ))}
+            </div>
+          )}
         </div>
 
         <ToolAnalyzerModal 

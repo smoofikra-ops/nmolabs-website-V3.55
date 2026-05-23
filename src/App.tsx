@@ -104,7 +104,12 @@ const MainContent = () => {
 
   return (
     <main>
-      {config.sectionOrder.map(renderSection)}
+      {config.sectionOrder.map((id, index) => (
+        <React.Fragment key={id}>
+          {renderSection(id)}
+          {index < config.sectionOrder.length - 1 && <div className="glow-divider" />}
+        </React.Fragment>
+      ))}
     </main>
   );
 };

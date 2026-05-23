@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useSite } from '../context/SiteContext';
 import { triggerBookingModal } from './BookingModal';
 import { motion, AnimatePresence } from 'motion/react';
-import { ChevronDown } from 'lucide-react';
+import { ChevronDown, X, ArrowUpRight } from 'lucide-react';
 import branchImg from '../assets/images/regenerated_image_1779062361308.png';
 import ecommerceImg from '../assets/images/regenerated_image_1779062368023.png';
 import sallaLogo from '../assets/images/regenerated_image_1779415116970.png';
@@ -50,7 +50,7 @@ const branchValues = [
   },
   {
     title: 'حفظ سلوك واهتمامات العميل',
-    desc: 'الأداة تتعلم من كل زيارة، تحفظ المنتجات المفضلة والاحتياجات وتوقعات العميل. فإذا رجع الفرع مرة ثانية، تقدر تقدم له تجربة شخصية سريعة ومخصصة له بالضبط.'
+    desc: 'الأداة تتعلم من كل زيارة، تحفظ المنتجات المفضلة والاحتياجات وتوقعات العميل. فإذا رجع الفرع مرة ثانية، تقدر تقديم له تجربة شخصية سريعة ومخصصة له بالضبط.'
   }
 ];
 
@@ -135,6 +135,17 @@ export const Solutions = () => {
   const [openChallengeId, setOpenChallengeId] = useState<number | null>(0);
   const [openValueId, setOpenValueId] = useState<number | null>(0);
   const [openEcoId, setOpenEcoId] = useState<number | null>(0);
+  const [isMobile, setIsMobile] = useState(false);
+  const [activeSolutionModal, setActiveSolutionModal] = useState<'branch' | 'ecommerce' | null>(null);
+
+  React.useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   // Typewriter effect component for Navigator of Growth
   const TypewriterText = ({ text, speed = 50, delay = 0 }: { text: string; speed?: number, delay?: number }) => {
@@ -189,186 +200,268 @@ export const Solutions = () => {
           </motion.p>
         </div>
 
-        <div className="flex md:grid md:grid-cols-2 overflow-x-auto md:overflow-x-visible snap-x snap-mandatory scrollbar-hide gap-8 lg:gap-12 relative items-start pb-4 w-full px-2">
-          
-          {/* Card 1: Retail Branches */}
-          <motion.div 
-            initial={{ opacity: 0, x: 50 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            className="snap-center shrink-0 w-[85vw] md:w-auto p-8 md:p-10 rounded-3xl border border-black/80 bg-black/40 relative overflow-hidden group hover:-translate-y-1 hover:shadow-[0_0_50px_rgba(79,142,247,0.15)] transition-all duration-500 shadow-[inset_0_4px_12px_rgba(0,0,0,0.8),0_1px_1px_rgba(255,255,255,0.05)]"
-          >
-            <div className="absolute top-0 right-0 w-64 h-64 bg-[color:var(--color-brand-blue-val)] opacity-10 blur-[60px] rounded-full group-hover:opacity-20 transition-all duration-700 pointer-events-none" />
-            
-            <div className="relative z-10">
-              <div className="flex items-start justify-between mb-6">
-                <div className="w-40 h-40 relative group-hover:scale-110 group-hover:-translate-y-2 transition-transform duration-500 shrink-0">
-                  <div className="absolute inset-0 bg-[color:var(--color-brand-blue-val)] opacity-20 blur-[30px] rounded-full group-hover:opacity-40 transition-opacity duration-500 pointer-events-none"></div>
+        {isMobile ? (
+          <div className="flex overflow-x-auto snap-x snap-mandatory gap-6 pb-6 w-full scrollbar-hide px-2">
+            {/* Card 1: Retail Branches Mobile */}
+            <div className="snap-center shrink-0 w-[85vw] p-6 rounded-3xl border border-white/10 bg-black/50 relative overflow-hidden flex flex-col h-full shadow-[inset_0_2px_8px_rgba(0,0,0,0.8)]">
+              <div className="absolute top-0 right-0 w-48 h-48 bg-[color:var(--color-brand-blue-val)] opacity-10 blur-[50px] rounded-full pointer-events-none" />
+              <div className="relative z-10 flex flex-col h-full justify-between">
+                <div className="flex items-center gap-4 mb-4">
                   <img 
                     src={branchImg} 
                     alt="البائع الذكي للفروع" 
-                    loading="lazy"
-                    className="w-full h-full object-contain relative z-10 drop-shadow-[0_10px_20px_rgba(0,0,0,0.5)]" 
-                    referrerPolicy="no-referrer"
+                    className="w-16 h-16 object-contain drop-shadow-[0_5px_10px_rgba(0,0,0,0.5)] shrink-0" 
                     onError={(e) => {
                       e.currentTarget.src = "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&q=80&w=400&h=400";
-                      e.currentTarget.classList.add("rounded-2xl");
+                      e.currentTarget.classList.add("rounded-xl");
                     }}
                   />
+                  <div className="flex flex-col">
+                    <span className="text-[9px] font-bold text-white px-2 py-0.5 rounded-full bg-[color:var(--color-brand-blue-val)]/25 border border-[color:var(--color-brand-blue-val)]/30 w-max mb-1 animate-pulse">كن أول من يحصل على الخدمة</span>
+                    <h3 className="text-lg font-bold text-white">البائع الذكي للفروع</h3>
+                  </div>
                 </div>
-                 <button 
-                  onClick={() => triggerBookingModal('البائع الذكي للفروع')} 
-                  className="mt-4 w-full px-6 py-2.5 bg-[color:var(--color-brand-blue-val)] hover:brightness-110 text-white rounded-full font-bold text-sm shadow-[0_0_15px_rgba(43,194,194,0.3)] transition-transform hover:-translate-y-1 block text-center cursor-pointer"
-                >
-                  كن أول من يحصل على الخدمة
-                </button>
-              </div>
-              
-              <h3 className="text-2xl md:text-3xl font-bold mb-4 text-[color:var(--color-text-main)] text-shadow-sm">البائع الذكي للفروع</h3>
-              <p className="text-[color:var(--color-text-muted)] mb-6 leading-relaxed font-light">
-                إليك التحديات التي واجهناها والتي دفعتنا للابتكار، بالإضافة إلى القيمة المضافة لعلامتك التجارية.
-              </p>
-
-              <div className="flex gap-2 mb-6 bg-black/40 p-1.5 rounded-full border border-white/10 w-max">
-                <button 
-                  onClick={() => setBranchTab('challenges')} 
-                  className={`px-5 py-2 rounded-full text-sm font-bold transition-all duration-300 ${branchTab === 'challenges' ? 'bg-[color:var(--color-brand-blue-val)] text-white shadow-lg' : 'text-gray-400 hover:text-white'}`}
-                >
-                  التحديات
-                </button>
-                <button 
-                  onClick={() => setBranchTab('values')} 
-                  className={`px-5 py-2 rounded-full text-sm font-bold transition-all duration-300 ${branchTab === 'values' ? 'bg-[color:var(--color-brand-blue-val)] text-white shadow-lg' : 'text-gray-400 hover:text-white'}`}
-                >
-                  القيمة المضافة
-                </button>
-              </div>
-              
-              <div className="w-full">
-                <AnimatePresence mode="wait">
-                  <motion.div
-                    key={branchTab}
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -10 }}
-                    transition={{ duration: 0.2 }}
+                <p className="text-xs text-[color:var(--color-text-muted)] mb-6 leading-relaxed font-light">
+                  علامتك التجارية ستكون من أوائل الشركات في المملكة والخليج التي تسخر الذكاء الاصطناعي داخل الفروع بشكل حقيقي ومثمر.
+                </p>
+                <div className="grid grid-cols-2 gap-3 mt-auto">
+                  <button 
+                    onClick={() => setActiveSolutionModal('branch')}
+                    className="py-3 text-xs font-bold text-white bg-white/5 border border-white/15 rounded-xl transition-all active:scale-95 cursor-pointer text-center"
                   >
-                    {branchTab === 'challenges' && branchChallenges.map((challenge, i) => (
-                      <AccordionItem 
-                        key={i}
-                        title={challenge.title}
-                        content={challenge.desc}
-                        isOpen={openChallengeId === i}
-                        onClick={() => setOpenChallengeId(openChallengeId === i ? null : i)}
-                        colorClass="text-[color:var(--color-brand-blue-val)]"
-                      />
-                    ))}
-                    {branchTab === 'values' && branchValues.map((val, i) => (
-                      <AccordionItem 
-                        key={i}
-                        title={val.title}
-                        content={val.desc}
-                        isOpen={openValueId === i}
-                        onClick={() => setOpenValueId(openValueId === i ? null : i)}
-                        colorClass="text-[color:var(--color-brand-blue-val)]"
-                      />
-                    ))}
-                  </motion.div>
-                </AnimatePresence>
+                    تفاصيل أكثر
+                  </button>
+                  <button 
+                    onClick={() => triggerBookingModal('البائع الذكي للفروع')} 
+                    className="py-3 text-xs font-bold text-white bg-gradient-to-r from-[#2bc2c2] to-brand-blue rounded-xl transition-all active:scale-95 cursor-pointer text-center shadow-[0_0_15px_rgba(43,194,194,0.3)]"
+                  >
+                    تواصل معنا الآن
+                  </button>
+                </div>
               </div>
             </div>
-          </motion.div>
 
-          {/* Card 2: E-commerce */}
-          <motion.div 
-            initial={{ opacity: 0, x: -50 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.2 }}
-            className="snap-center shrink-0 w-[85vw] md:w-auto p-8 md:p-10 rounded-3xl border border-black/80 bg-black/40 relative overflow-hidden group hover:-translate-y-1 hover:shadow-[0_0_50px_rgba(124,58,237,0.15)] transition-all duration-500 shadow-[inset_0_4px_12px_rgba(0,0,0,0.8),0_1px_1px_rgba(255,255,255,0.05)]"
-          >
-            <div className="absolute top-0 right-0 w-64 h-64 bg-[color:var(--color-brand-purple-val)] opacity-10 blur-[60px] rounded-full group-hover:opacity-20 transition-all duration-700 pointer-events-none" />
-            
-            <div className="relative z-10">
-              <div className="flex items-start justify-between mb-6">
-                <div className="w-40 h-40 relative group-hover:scale-110 group-hover:-translate-y-2 transition-transform duration-500 shrink-0">
-                  <div className="absolute inset-0 bg-[color:var(--color-brand-purple-val)] opacity-20 blur-[30px] rounded-full group-hover:opacity-40 transition-opacity duration-500 pointer-events-none"></div>
+            {/* Card 2: E-commerce Mobile */}
+            <div className="snap-center shrink-0 w-[85vw] p-6 rounded-3xl border border-white/10 bg-black/50 relative overflow-hidden flex flex-col h-full shadow-[inset_0_2px_8px_rgba(0,0,0,0.8)]">
+              <div className="absolute top-0 right-0 w-48 h-48 bg-[color:var(--color-brand-purple-val)] opacity-10 blur-[50px] rounded-full pointer-events-none" />
+              <div className="relative z-10 flex flex-col h-full justify-between">
+                <div className="flex items-center gap-4 mb-4">
                   <img 
                     src={ecommerceImg} 
                     alt="البائع الذكي للمتاجر الإلكترونية" 
-                    loading="lazy"
-                    className="w-full h-full object-contain relative z-10 drop-shadow-[0_10px_20px_rgba(0,0,0,0.5)]" 
-                    referrerPolicy="no-referrer"
+                    className="w-16 h-16 object-contain drop-shadow-[0_5px_10px_rgba(0,0,0,0.5)] shrink-0" 
                     onError={(e) => {
                       e.currentTarget.src = "https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?auto=format&fit=crop&q=80&w=400&h=400";
-                      e.currentTarget.classList.add("rounded-2xl");
+                      e.currentTarget.classList.add("rounded-xl");
                     }}
                   />
+                  <div className="flex flex-col">
+                    <span className="text-[9px] font-bold text-white px-2 py-0.5 rounded-full bg-[color:var(--color-brand-purple-val)]/25 border border-[color:var(--color-brand-purple-val)]/30 w-max mb-1 animate-pulse">كن أول من يحصل على الخدمة</span>
+                    <h3 className="text-lg font-bold text-white">البائع الذكي للمتاجر</h3>
+                  </div>
                 </div>
-                 <button 
-                  onClick={() => triggerBookingModal('البائع الذكي للمتاجر الإلكترونية')} 
-                  className="mt-4 w-full px-6 py-2.5 bg-[color:var(--color-brand-purple-val)] hover:brightness-110 text-white rounded-full font-bold text-sm shadow-[0_0_15px_rgba(19,80,91,0.3)] transition-transform hover:-translate-y-1 block text-center cursor-pointer"
-                >
-                  تواصل معنا
-                </button>
-              </div>
-              
-              <h3 className="text-2xl md:text-3xl font-bold mb-4 text-[color:var(--color-text-main)] text-shadow-sm">البائع الذكي للمتاجر الإلكترونية</h3>
-              <p className="text-[color:var(--color-text-muted)] mb-6 leading-relaxed font-light">
-                أداة تضعك في الريادة؛ توسع شرائح عملائك، وتعمل على مدار الساعة وتحفظ التفضيلات لتقديم خدمة شخصية لا تُنسى.
-              </p>
-              
-              <div className="flex gap-2 mb-6 bg-black/40 p-1.5 rounded-full border border-white/10 w-max">
-                <button 
-                  onClick={() => setEcoTab('challenges')} 
-                  className={`px-5 py-2 rounded-full text-sm font-bold transition-all duration-300 ${ecoTab === 'challenges' ? 'bg-[color:var(--color-brand-purple-val)] text-white shadow-lg' : 'text-gray-400 hover:text-white'}`}
-                >
-                  التحديات
-                </button>
-                <button 
-                  onClick={() => setEcoTab('values')} 
-                  className={`px-5 py-2 rounded-full text-sm font-bold transition-all duration-300 ${ecoTab === 'values' ? 'bg-[color:var(--color-brand-purple-val)] text-white shadow-lg' : 'text-gray-400 hover:text-white'}`}
-                >
-                  القيمة المضافة
-                </button>
-              </div>
-              
-              <div className="w-full">
-                <AnimatePresence mode="wait">
-                  <motion.div
-                    key={ecoTab}
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -10 }}
-                    transition={{ duration: 0.2 }}
+                <p className="text-xs text-[color:var(--color-text-muted)] mb-6 leading-relaxed font-light">
+                  مساعد تفاعلي ذكي يعمل على مدار الساعة لخدمة عملائك، خفض التكاليف التشغيلية، ومضاعفة نسبة التحويل للمبيعات.
+                </p>
+                <div className="grid grid-cols-2 gap-3 mt-auto">
+                  <button 
+                    onClick={() => setActiveSolutionModal('ecommerce')}
+                    className="py-3 text-xs font-bold text-white bg-white/5 border border-white/15 rounded-xl transition-all active:scale-95 cursor-pointer text-center"
                   >
-                    {ecoTab === 'challenges' && ecommerceChallenges.map((challenge, i) => (
-                      <AccordionItem 
-                        key={i}
-                        title={challenge.title}
-                        content={challenge.desc}
-                        isOpen={openEcoId === i}
-                        onClick={() => setOpenEcoId(openEcoId === i ? null : i)}
-                        colorClass="text-[color:var(--color-brand-purple-val)]"
-                      />
-                    ))}
-                    {ecoTab === 'values' && ecommerceValues.map((val, i) => (
-                      <AccordionItem 
-                        key={i}
-                        title={val.title}
-                        content={val.desc}
-                        isOpen={openEcoId === i}
-                        onClick={() => setOpenEcoId(openEcoId === i ? null : i)}
-                        colorClass="text-[color:var(--color-brand-purple-val)]"
-                      />
-                    ))}
-                  </motion.div>
-                </AnimatePresence>
+                    تفاصيل أكثر
+                  </button>
+                  <button 
+                    onClick={() => triggerBookingModal('البائع الذكي للمتاجر الإلكترونية')} 
+                    className="py-3 text-xs font-bold text-white bg-gradient-to-r from-brand-blue to-brand-purple rounded-xl transition-all active:scale-95 cursor-pointer text-center shadow-[0_0_15px_rgba(124,58,237,0.3)]"
+                  >
+                    تواصل معنا الآن
+                  </button>
+                </div>
               </div>
             </div>
-          </motion.div>
+          </div>
+        ) : (
+          <div className="flex md:grid md:grid-cols-2 overflow-x-auto md:overflow-x-visible snap-x snap-mandatory scrollbar-hide gap-8 lg:gap-12 relative items-start pb-4 w-full px-2">
+            
+            {/* Card 1: Retail Branches */}
+            <motion.div 
+              initial={{ opacity: 0, x: 50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              className="snap-center shrink-0 w-[85vw] md:w-auto p-8 md:p-10 rounded-3xl border border-black/80 bg-black/40 relative overflow-hidden group hover:-translate-y-1 hover:shadow-[0_0_50px_rgba(79,142,247,0.15)] transition-all duration-500 shadow-[inset_0_4px_12px_rgba(0,0,0,0.8),0_1px_1px_rgba(255,255,255,0.05)]"
+            >
+              <div className="absolute top-0 right-0 w-64 h-64 bg-[color:var(--color-brand-blue-val)] opacity-10 blur-[60px] rounded-full group-hover:opacity-20 transition-all duration-700 pointer-events-none" />
+              
+              <div className="relative z-10">
+                <div className="flex items-start justify-between mb-6">
+                  <div className="w-40 h-40 relative group-hover:scale-110 group-hover:-translate-y-2 transition-transform duration-500 shrink-0">
+                    <div className="absolute inset-0 bg-[color:var(--color-brand-blue-val)] opacity-20 blur-[30px] rounded-full group-hover:opacity-40 transition-opacity duration-500 pointer-events-none"></div>
+                    <img 
+                      src={branchImg} 
+                      alt="البائع الذكي للفروع" 
+                      loading="lazy"
+                      className="w-full h-full object-contain relative z-10 drop-shadow-[0_10px_20px_rgba(0,0,0,0.5)]" 
+                      referrerPolicy="no-referrer"
+                      onError={(e) => {
+                        e.currentTarget.src = "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&q=80&w=400&h=400";
+                        e.currentTarget.classList.add("rounded-2xl");
+                      }}
+                    />
+                  </div>
+                   <button 
+                    onClick={() => triggerBookingModal('البائع الذكي للفروع')} 
+                    className="mt-4 w-full px-6 py-2.5 bg-[color:var(--color-brand-blue-val)] hover:brightness-110 text-white rounded-full font-bold text-sm shadow-[0_0_15px_rgba(43,194,194,0.3)] transition-transform hover:-translate-y-1 block text-center cursor-pointer"
+                  >
+                    كن أول من يحصل على الخدمة
+                  </button>
+                </div>
+                
+                <h3 className="text-2xl md:text-3xl font-bold mb-4 text-[color:var(--color-text-main)] text-shadow-sm">البائع الذكي للفروع</h3>
+                <p className="text-[color:var(--color-text-muted)] mb-6 leading-relaxed font-light">
+                  إليك التحديات التي واجهناها والتي دفعتنا للابتكار، بالإضافة إلى القيمة المضافة لعلامتك التجارية.
+                </p>
 
-        </div>
+                <div className="flex gap-2 mb-6 bg-black/40 p-1.5 rounded-full border border-white/10 w-max">
+                  <button 
+                    onClick={() => setBranchTab('challenges')} 
+                    className={`px-5 py-2 rounded-full text-sm font-bold transition-all duration-300 ${branchTab === 'challenges' ? 'bg-[color:var(--color-brand-blue-val)] text-white shadow-lg' : 'text-gray-400 hover:text-white'}`}
+                  >
+                    التحديات
+                  </button>
+                  <button 
+                    onClick={() => setBranchTab('values')} 
+                    className={`px-5 py-2 rounded-full text-sm font-bold transition-all duration-300 ${branchTab === 'values' ? 'bg-[color:var(--color-brand-blue-val)] text-white shadow-lg' : 'text-gray-400 hover:text-white'}`}
+                  >
+                    القيمة المضافة
+                  </button>
+                </div>
+                
+                <div className="w-full">
+                  <AnimatePresence mode="wait">
+                    <motion.div
+                      key={branchTab}
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -10 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      {branchTab === 'challenges' && branchChallenges.map((challenge, i) => (
+                        <AccordionItem 
+                          key={i}
+                          title={challenge.title}
+                          content={challenge.desc}
+                          isOpen={openChallengeId === i}
+                          onClick={() => setOpenChallengeId(openChallengeId === i ? null : i)}
+                          colorClass="text-[color:var(--color-brand-blue-val)]"
+                        />
+                      ))}
+                      {branchTab === 'values' && branchValues.map((val, i) => (
+                        <AccordionItem 
+                          key={i}
+                          title={val.title}
+                          content={val.desc}
+                          isOpen={openValueId === i}
+                          onClick={() => setOpenValueId(openValueId === i ? null : i)}
+                          colorClass="text-[color:var(--color-brand-blue-val)]"
+                        />
+                      ))}
+                    </motion.div>
+                  </AnimatePresence>
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Card 2: E-commerce */}
+            <motion.div 
+              initial={{ opacity: 0, x: -50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.2 }}
+              className="snap-center shrink-0 w-[85vw] md:w-auto p-8 md:p-10 rounded-3xl border border-black/80 bg-black/40 relative overflow-hidden group hover:-translate-y-1 hover:shadow-[0_0_50px_rgba(124,58,237,0.15)] transition-all duration-500 shadow-[inset_0_4px_12px_rgba(0,0,0,0.8),0_1px_1px_rgba(255,255,255,0.05)]"
+            >
+              <div className="absolute top-0 right-0 w-64 h-64 bg-[color:var(--color-brand-purple-val)] opacity-10 blur-[60px] rounded-full group-hover:opacity-20 transition-all duration-700 pointer-events-none" />
+              
+              <div className="relative z-10">
+                <div className="flex items-start justify-between mb-6">
+                  <div className="w-40 h-40 relative group-hover:scale-110 group-hover:-translate-y-2 transition-transform duration-500 shrink-0">
+                    <div className="absolute inset-0 bg-[color:var(--color-brand-purple-val)] opacity-20 blur-[30px] rounded-full group-hover:opacity-40 transition-opacity duration-500 pointer-events-none"></div>
+                    <img 
+                      src={ecommerceImg} 
+                      alt="البائع الذكي للمتاجر الإلكترونية" 
+                      loading="lazy"
+                      className="w-full h-full object-contain relative z-10 drop-shadow-[0_10px_20px_rgba(0,0,0,0.5)]" 
+                      referrerPolicy="no-referrer"
+                      onError={(e) => {
+                        e.currentTarget.src = "https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?auto=format&fit=crop&q=80&w=400&h=400";
+                        e.currentTarget.classList.add("rounded-2xl");
+                      }}
+                    />
+                  </div>
+                   <button 
+                    onClick={() => triggerBookingModal('البائع الذكي للمتاجر الإلكترونية')} 
+                    className="mt-4 w-full px-6 py-2.5 bg-[color:var(--color-brand-purple-val)] hover:brightness-110 text-white rounded-full font-bold text-sm shadow-[0_0_15px_rgba(19,80,91,0.3)] transition-transform hover:-translate-y-1 block text-center cursor-pointer"
+                  >
+                    تواصل معنا
+                  </button>
+                </div>
+                
+                <h3 className="text-2xl md:text-3xl font-bold mb-4 text-[color:var(--color-text-main)] text-shadow-sm">البائع الذكي للمتاجر الإلكترونية</h3>
+                <p className="text-[color:var(--color-text-muted)] mb-6 leading-relaxed font-light">
+                  أداة تضعك في الريادة؛ توسع شرائح عملائك، وتعمل على مدار الساعة وتحفظ التفضيلات لتقديم خدمة شخصية لا تُنسى.
+                </p>
+                
+                <div className="flex gap-2 mb-6 bg-black/40 p-1.5 rounded-full border border-white/10 w-max">
+                  <button 
+                    onClick={() => setEcoTab('challenges')} 
+                    className={`px-5 py-2 rounded-full text-sm font-bold transition-all duration-300 ${ecoTab === 'challenges' ? 'bg-[color:var(--color-brand-purple-val)] text-white shadow-lg' : 'text-gray-400 hover:text-white'}`}
+                  >
+                    التحديات
+                  </button>
+                  <button 
+                    onClick={() => setEcoTab('values')} 
+                    className={`px-5 py-2 rounded-full text-sm font-bold transition-all duration-300 ${ecoTab === 'values' ? 'bg-[color:var(--color-brand-purple-val)] text-white shadow-lg' : 'text-gray-400 hover:text-white'}`}
+                  >
+                    القيمة المضافة
+                  </button>
+                </div>
+                
+                <div className="w-full">
+                  <AnimatePresence mode="wait">
+                    <motion.div
+                      key={ecoTab}
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -10 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      {ecoTab === 'challenges' && ecommerceChallenges.map((challenge, i) => (
+                        <AccordionItem 
+                          key={i}
+                          title={challenge.title}
+                          content={challenge.desc}
+                          isOpen={openEcoId === i}
+                          onClick={() => setOpenEcoId(openEcoId === i ? null : i)}
+                          colorClass="text-[color:var(--color-brand-purple-val)]"
+                        />
+                      ))}
+                      {ecoTab === 'values' && ecommerceValues.map((val, i) => (
+                        <AccordionItem 
+                          key={i}
+                          title={val.title}
+                          content={val.desc}
+                          isOpen={openEcoId === i}
+                          onClick={() => setOpenEcoId(openEcoId === i ? null : i)}
+                          colorClass="text-[color:var(--color-brand-purple-val)]"
+                        />
+                      ))}
+                    </motion.div>
+                  </AnimatePresence>
+                </div>
+              </div>
+            </motion.div>
+
+          </div>
+        )}
 
         {/* Navigator of Growth Section */}
         <motion.div 
@@ -407,19 +500,128 @@ export const Solutions = () => {
             <div className="w-full md:w-1/3 flex flex-col items-center justify-center gap-6 relative">
               <div className="absolute inset-0 bg-[color:var(--color-brand-blue-val)] opacity-15 blur-[60px] rounded-full animate-pulse pointer-events-none" />
               <div className="grid grid-cols-2 gap-4 relative z-10 w-full max-w-[340px]">
-                <div className="bg-[#0c1619] border-2 border-[#2bc2c2]/20 hover:border-[#2bc2c2]/60 rounded-2xl p-6 flex flex-col items-center justify-center gap-3 hover:bg-[#0c1619]/80 transition-all shadow-[0_0_20px_rgba(43,194,194,0.15)] hover:shadow-[0_0_30px_rgba(43,194,194,0.35)] transform hover:-translate-y-1">
-                  <img src={sallaLogo} alt="Salla" className="w-20 h-20 object-contain" />
-                  <span className="text-sm font-bold text-gray-200">سلة</span>
+                <div className="bg-[#0c1619] border-2 border-[#2bc2c2]/50 max-md:border-[#2bc2c2]/80 hover:border-[#2bc2c2]/80 rounded-2xl p-6 flex flex-col items-center justify-center gap-3 hover:bg-[#0c1619]/80 transition-all shadow-[0_0_20px_rgba(43,194,194,0.3)] max-md:shadow-[0_0_30px_rgba(43,194,194,0.6)] transform hover:-translate-y-1 active:scale-95">
+                  <img src={sallaLogo} alt="Salla" className="w-16 h-16 md:w-20 md:h-20 object-contain" />
+                  <span className="text-sm font-bold text-white">سلة</span>
                 </div>
-                <div className="bg-[#140b19] border-2 border-[#7C3AED]/20 hover:border-[#7C3AED]/60 rounded-2xl p-6 flex flex-col items-center justify-center gap-3 hover:bg-[#140b19]/80 transition-all shadow-[0_0_20px_rgba(124,58,237,0.15)] hover:shadow-[0_0_30px_rgba(124,58,237,0.35)] transform hover:-translate-y-1">
-                  <img src={zidLogo} alt="Zid" className="w-20 h-20 object-contain" />
-                  <span className="text-sm font-bold text-gray-200">زد</span>
+                <div className="bg-[#140b19] border-2 border-[#7C3AED]/50 max-md:border-[#7C3AED]/80 hover:border-[#7C3AED]/80 rounded-2xl p-6 flex flex-col items-center justify-center gap-3 hover:bg-[#140b19]/80 transition-all shadow-[0_0_20px_rgba(124,58,237,0.3)] max-md:shadow-[0_0_30px_rgba(124,58,237,0.6)] transform hover:-translate-y-1 active:scale-95">
+                  <img src={zidLogo} alt="Zid" className="w-16 h-16 md:w-20 md:h-20 object-contain" />
+                  <span className="text-sm font-bold text-white">زد</span>
                 </div>
               </div>
             </div>
           </div>
         </motion.div>
       </div>
+
+      {/* Solutions Mobile Details Modal */}
+      <AnimatePresence>
+        {activeSolutionModal && (
+          <div 
+            className="fixed inset-0 z-[200] flex items-center justify-center bg-[#030307]/97 backdrop-blur-[2px] p-4 rtl"
+            onClick={() => setActiveSolutionModal(null)}
+          >
+            <motion.div 
+               initial={{ opacity: 0, scale: 0.95, y: 20 }}
+               animate={{ opacity: 1, scale: 1, y: 0 }}
+               exit={{ opacity: 0, scale: 0.95, y: 20 }}
+               onClick={(e) => e.stopPropagation()}
+               className="bg-[#080812] border-2 border-white/15 rounded-[24px] w-full max-w-2xl overflow-hidden shadow-[0_0_50px_rgba(79,142,247,0.25)] relative flex flex-col max-h-[90vh]"
+            >
+               {/* Modal Header */}
+               <div className="p-6 pb-6 border-b border-white/10 flex justify-between items-start sticky top-0 bg-[#080812] z-10">
+                 <div className="flex flex-col gap-1.5">
+                   <h3 className="text-xl md:text-2xl font-bold text-white">
+                     {activeSolutionModal === 'branch' ? 'البائع الذكي للفروع' : 'البائع الذكي للمتاجر'}
+                   </h3>
+                   <span className="text-xs text-[color:var(--color-text-muted)]">حلول الذكاء الاصطناعي الابتكارية من NMOLABS</span>
+                 </div>
+                 <button 
+                   onClick={() => setActiveSolutionModal(null)}
+                   className="p-3 text-white bg-white/5 hover:bg-white/20 border border-white/10 rounded-full transition-all cursor-pointer shadow-lg flex items-center justify-center"
+                   aria-label="إغلاق"
+                 >
+                   <X size={20} />
+                 </button>
+               </div>
+
+               {/* Modal Body */}
+               <div className="p-6 md:p-8 overflow-y-auto custom-scrollbar space-y-6">
+                 {/* Challenges Section */}
+                 <div>
+                   <h4 className="text-sm font-bold mb-4 text-[color:var(--color-brand-blue-val)] uppercase tracking-wider flex items-center gap-2">
+                     <span className="w-1.5 h-1.5 rounded-full bg-[color:var(--color-brand-blue-val)] shadow-[0_0_8px_var(--color-brand-blue-val)]" />
+                     أهم التحديات التي نعالجها:
+                   </h4>
+                   <div className="grid grid-cols-1 gap-3">
+                     {(activeSolutionModal === 'branch' ? branchChallenges : ecommerceChallenges).map((item, i) => (
+                       <div key={i} className="bg-white/5 border border-white/10 rounded-xl p-4">
+                         <h5 className="text-sm font-bold text-white mb-1.5">{item.title}</h5>
+                         <p className="text-xs text-[color:var(--color-text-muted)] leading-relaxed font-light">{item.desc}</p>
+                       </div>
+                     ))}
+                   </div>
+                 </div>
+
+                 {/* Value Added Section */}
+                 <div>
+                   <h4 className="text-sm font-bold mb-4 text-[color:var(--color-brand-purple-val)] uppercase tracking-wider flex items-center gap-2">
+                     <span className="w-1.5 h-1.5 rounded-full bg-[color:var(--color-brand-purple-val)] shadow-[0_0_8px_var(--color-brand-purple-val)]" />
+                     القيمة المضافة لعلامتك التجارية:
+                   </h4>
+                   <div className="grid grid-cols-1 gap-3">
+                     {(activeSolutionModal === 'branch' ? branchValues : ecommerceValues).map((item, i) => (
+                       <div key={i} className="bg-white/5 border border-white/10 rounded-xl p-4">
+                         <h5 className="text-sm font-bold text-white mb-1.5">{item.title}</h5>
+                         <p className="text-xs text-[color:var(--color-text-muted)] leading-relaxed font-light">{item.desc}</p>
+                       </div>
+                     ))}
+                   </div>
+                 </div>
+
+                 {/* Expected Results Section */}
+                 <div>
+                   <h4 className="text-sm font-bold mb-4 text-emerald-400 uppercase tracking-wider flex items-center gap-2">
+                     <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.8)]" />
+                     النتائج المتوقعة بالأرقام:
+                   </h4>
+                   <div className="grid grid-cols-1 gap-3">
+                     {(activeSolutionModal === 'branch' ? [
+                       "زيادة المبيعات بنسبة تصل إلى 25% من خلال تفعيل البيع الإضافي التلقائي.",
+                       "تخفيض تكاليف التوظيف والتدريب الموسمي للبائعين بنسبة تفوق 40%.",
+                       "خدمة أسرع للعميل وصفر زيادات في أوقات الانتظار خلال ساعات الذروة."
+                     ] : [
+                       "رفع معدل التحويل (Conversion Rate) بنسبة تصل إلى 30%.",
+                       "تقليص معدل استرجاع المنتجات بفضل التوضيح الدقيق ومساعدة المشتري.",
+                       "توفير دعم فوري للعملاء على مدار الساعة وخفض ضغط التذاكر على فريق الدعم."
+                     ]).map((result, i) => (
+                       <div key={i} className="flex items-start gap-3 text-white bg-emerald-950/20 border border-emerald-500/20 p-3.5 rounded-xl">
+                         <span className="flex items-center justify-center w-5 h-5 rounded-full bg-emerald-500/20 text-emerald-400 text-xs font-bold shrink-0 mt-0.5">✓</span>
+                         <span className="text-xs font-medium leading-relaxed">{result}</span>
+                       </div>
+                     ))}
+                   </div>
+                 </div>
+               </div>
+
+               {/* Modal Footer */}
+               <div className="p-6 bg-white/5 border-t border-white/10 flex items-center gap-4 sticky bottom-0">
+                 <button 
+                    className="w-full flex items-center justify-center gap-2 text-white font-bold py-3.5 px-8 rounded-xl transition-all cursor-pointer bg-gradient-to-r from-brand-blue to-brand-purple hover:shadow-[0_0_25px_rgba(79,142,247,0.5)] transform active:scale-95"
+                    onClick={() => {
+                      const title = activeSolutionModal === 'branch' ? 'البائع الذكي للفروع' : 'البائع الذكي للمتاجر الإلكترونية';
+                      setActiveSolutionModal(null);
+                      triggerBookingModal(title);
+                    }}
+                  >
+                   <span>تواصل معنا لتفعيل الخدمة</span>
+                   <ArrowUpRight size={18} />
+                 </button>
+               </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </section>
   );
 };
