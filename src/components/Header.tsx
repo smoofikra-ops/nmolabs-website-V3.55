@@ -95,18 +95,22 @@ export const Header = () => {
       animate={{ y: 0 }}
       className="fixed top-0 left-0 right-0 z-50 px-4 md:px-6 py-4"
     >
-      <div className="max-w-7xl mx-auto flex items-center justify-between bg-black/40 shadow-[inset_0_4px_12px_rgba(0,0,0,0.8),0_1px_1px_rgba(255,255,255,0.05)] border border-black/80 rounded-2xl px-4 md:px-6 py-3 transition-colors backdrop-blur-md">
-        {/* Mobile Menu Button - Right (for RTL) */}
+      <div className="max-w-7xl mx-auto flex items-center justify-between bg-black/40 shadow-[inset_0_4px_12px_rgba(0,0,0,0.8),0_1px_1px_rgba(255,255,255,0.05)] border border-black/80 rounded-2xl px-3 md:px-6 py-2 md:py-3 transition-colors backdrop-blur-md">
+        {/* Mobile Menu Button - Right (for RTL) or Left (for LTR) */}
         <button 
-          className="lg:hidden text-white hover:text-[color:var(--color-brand-blue)] transition-colors p-2 -mr-2"
+          className="lg:hidden text-white hover:text-[color:var(--color-brand-blue-val)] transition-all bg-white/5 hover:bg-white/10 p-2.5 rounded-xl border border-white/10 flex items-center justify-center cursor-pointer"
           onClick={() => setIsMobileMenuOpen(true)}
+          aria-label="القائمة"
         >
-          <Menu size={24} />
+          <Menu size={20} />
         </button>
 
         {/* Logo - Right */}
         <div className="flex items-center gap-2 cursor-pointer" onClick={() => handleScroll('hero')}>
-          <img src={siteLogo} alt="NMOLABS" className="h-10 object-contain drop-shadow-[0_0_15px_rgba(79,142,247,0.3)]"
+          <img 
+            src={siteLogo} 
+            alt="NMOLABS" 
+            className="h-8 md:h-10 max-w-[120px] md:max-w-none object-contain drop-shadow-[0_0_15px_rgba(79,142,247,0.3)]"
             onError={(e) => {
               // Fallback to text if image not uploaded yet
               e.currentTarget.style.display = 'none';
@@ -184,61 +188,63 @@ export const Header = () => {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.3 }}
-              className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[60] lg:hidden"
+              className="fixed inset-0 bg-black/75 backdrop-blur-sm z-[60] lg:hidden"
               onClick={() => setIsMobileMenuOpen(false)}
             />
             <motion.div
-              initial={{ x: '100%' }}
+              initial={{ x: config.language === 'en' ? '-100%' : '100%' }}
               animate={{ x: 0 }}
-              exit={{ x: '100%' }}
+              exit={{ x: config.language === 'en' ? '-100%' : '100%' }}
               transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-              className="fixed top-0 right-0 bottom-0 w-full max-w-[320px] bg-gradient-to-b from-[#0c0c0c] to-[#121212] border-l border-white/10 shadow-2xl z-[70] lg:hidden flex flex-col p-8 overflow-y-auto"
+              className={`fixed top-0 bottom-0 w-full max-w-[320px] bg-gradient-to-b from-[#0c0c0c] to-[#121212] border-white/10 shadow-2xl z-[70] lg:hidden flex flex-col p-8 overflow-y-auto ${
+                config.language === 'en' ? 'left-0 border-r' : 'right-0 border-l'
+              }`}
               dir={config.language === 'en' ? 'ltr' : 'rtl'}
             >
               <div className="flex items-center justify-between mb-10 pb-4 border-b border-white/5">
                 <div className="flex items-center gap-2">
-                  <img src={siteLogo} alt="NMOLABS" className="h-10 object-contain drop-shadow-md" />
+                  <img src={siteLogo} alt="NMOLABS" className="h-8 object-contain drop-shadow-md" />
                 </div>
                 <button 
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="p-2.5 text-gray-400 hover:text-white transition-all bg-white/5 hover:bg-white/10 rounded-full"
+                  className="p-2.5 text-gray-400 hover:text-white transition-all bg-white/5 hover:bg-white/10 rounded-full cursor-pointer"
+                  aria-label="إغلاق"
                 >
-                  <X size={22} />
+                  <X size={20} />
                 </button>
               </div>
 
               <div className="flex flex-col gap-2 flex-1">
-                {mainNavItems.map((item, idx) => (
-                  <div key={idx} className="mb-2">
-                    {item.dropdown ? (
-                      <div className="flex flex-col gap-2 bg-white/[0.02] rounded-2xl p-4 border border-white/5">
-                        <span className="text-gray-300 font-bold px-2 flex items-center gap-2 select-none">
-                          <div className="w-1.5 h-1.5 rounded-full bg-[color:var(--color-brand-blue-val)]" />
-                          {item.name}
-                        </span>
-                        <div className="flex flex-col gap-1 mt-2">
-                          {item.dropdown.map((dropItem, dropIdx) => (
-                            <button
-                              key={dropIdx}
-                              onClick={() => handleScroll(dropItem.act)}
-                              className="text-right text-gray-400 hover:text-white py-2.5 px-4 rounded-xl hover:bg-[color:var(--color-brand-blue-val)]/10 transition-all font-medium text-sm flex items-center gap-2"
-                            >
-                              <span className="w-1 h-1 rounded-full bg-gray-500 opacity-50" />
-                              {dropItem.name}
-                            </button>
-                          ))}
-                        </div>
-                      </div>
-                    ) : (
-                      <button
-                        onClick={() => handleScroll(item.act)}
-                        className="text-right text-gray-300 hover:text-white hover:bg-white/5 py-3.5 px-4 rounded-2xl w-full font-bold transition-all text-base flex items-center gap-3 border border-transparent hover:border-white/5"
-                      >
-                        <div className="w-1.5 h-1.5 rounded-full bg-[color:var(--color-brand-blue-val)]" />
-                        {item.name}
-                      </button>
-                    )}
-                  </div>
+                {(config.language === 'en' ? [
+                  { name: 'Home', act: 'hero' },
+                  { name: 'Marketing Services', act: 'solutions' },
+                  { name: 'Growth Solutions', act: 'solutions' },
+                  { name: 'Growth Tools', act: 'tools' },
+                  { name: 'E-commerce Creation', act: 'ecommerce' },
+                  { name: 'Success Stories', act: 'testimonials' },
+                  { name: 'FAQ', act: 'faq' },
+                  { name: 'Contact Us', act: 'contact' }
+                ] : [
+                  { name: 'الرئيسية', act: 'hero' },
+                  { name: 'خدمات التسويق', act: 'solutions' },
+                  { name: 'حلول النمو', act: 'solutions' },
+                  { name: 'أدوات نمو لابز', act: 'tools' },
+                  { name: 'إنشاء المتاجر الإلكترونية', act: 'ecommerce' },
+                  { name: 'قصص النجاح', act: 'testimonials' },
+                  { name: 'الأسئلة الشائعة', act: 'faq' },
+                  { name: 'تواصل معنا', act: 'contact' }
+                ]).map((item, idx) => (
+                  <button
+                    key={idx}
+                    onClick={() => {
+                      setIsMobileMenuOpen(false);
+                      handleScroll(item.act);
+                    }}
+                    className="text-right text-gray-300 hover:text-white hover:bg-white/5 py-3.5 px-4 rounded-2xl w-full font-bold transition-all text-base flex items-center gap-3 border border-transparent hover:border-white/5 cursor-pointer"
+                  >
+                    <div className="w-1.5 h-1.5 rounded-full bg-[color:var(--color-brand-blue-val)] shrink-0" />
+                    {item.name}
+                  </button>
                 ))}
               </div>
 

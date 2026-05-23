@@ -211,7 +211,7 @@ export const Services = () => {
                        ماذا نقدم في هذه الخدمة؟
                      </h4>
                      
-                     <ul className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
+                     <ul className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
                        {getServiceDeliverables(activeService.title).map((item, i) => (
                          <li key={i} className="flex items-center gap-3 text-[color:var(--color-text-main)] bg-[color:var(--glass-bg)] border border-[color:var(--glass-border)] p-4 rounded-xl">
                            {item}

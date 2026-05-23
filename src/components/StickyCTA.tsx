@@ -53,11 +53,11 @@ export const StickyCTA: React.FC = () => {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: 100 }}
           transition={{ type: 'spring', stiffness: 260, damping: 25 }}
-          className="fixed bottom-[16px] left-[14px] right-[14px] z-[9999] md:hidden"
+          className="fixed bottom-[14px] left-[14px] right-[14px] z-[9999] md:hidden"
         >
           <button
             onClick={handleClick}
-            className="w-full py-4 px-6 rounded-full font-bold text-base flex items-center justify-center gap-3 text-white shadow-2xl relative overflow-hidden transition-all duration-300 no-global-hover"
+            className="w-full py-4 px-6 rounded-[16px] font-bold text-base flex items-center justify-center gap-3 text-white shadow-2xl relative overflow-hidden transition-all duration-300 no-global-hover"
             style={{
               background: 'linear-gradient(135deg, var(--color-brand-blue-val, #2bc2c2) 0%, var(--color-brand-purple-val, #7C3AED) 100%)',
               boxShadow: '0 8px 32px rgba(43, 194, 194, 0.4), inset 0 1px 0 rgba(255,255,255,0.3)',

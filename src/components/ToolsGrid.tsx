@@ -137,7 +137,7 @@ export const ToolsGrid = () => {
                     <p className="text-gray-400">تشخيص وتطوير أداء متجرك من كل زاوية باستخدام أفضل الأدوات.</p>
                   </div>
                   
-                  <div className="grid sm:grid-cols-2 gap-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     {config.toolCategories[openIndex || 0].tools.map((tool, i) => (
                       <div 
                         key={i} 
