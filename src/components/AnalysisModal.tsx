@@ -2,6 +2,7 @@ import React from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { X, CheckCircle, AlertTriangle, Info, Zap, Smartphone, Search, Monitor, ShieldCheck } from 'lucide-react';
 import { useSite } from '../context/SiteContext';
+import { triggerBookingModal } from './BookingModal';
 
 export const AnalysisModal = ({ isOpen, onClose, url, results, isAnalyzing }) => {
   const { config } = useSite();
@@ -102,9 +103,9 @@ export const AnalysisModal = ({ isOpen, onClose, url, results, isAnalyzing }) =>
                     <button 
                       onClick={() => {
                         onClose();
-                        document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
+                        triggerBookingModal('تحليل متجر إلكتروني');
                       }}
-                      className="px-8 py-3 bg-[color:var(--color-brand-blue-val)] hover:brightness-110 text-white font-bold rounded-xl transition-all hover:-translate-y-1 hover:shadow-lg shadow-black"
+                      className="px-8 py-3 bg-[color:var(--color-brand-blue-val)] hover:brightness-110 text-white font-bold rounded-xl transition-all hover:-translate-y-1 hover:shadow-lg shadow-black cursor-pointer"
                     >
                       تواصل معنا الآن للبدء
                     </button>

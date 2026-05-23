@@ -239,44 +239,23 @@ export const ToolsGrid = () => {
                   ))}
                 </div>
                 
-                {(pkg.contactLink || pkg.buttonLabel === 'تواصل معنا' || pkg.buttonLabel.includes('تواصل')) ? (
-                  <a 
-                    href={config.contactNumber ? `https://wa.me/${config.contactNumber.replace(/[^0-9]/g, '')}` : '#contact'}
-                    target={config.contactNumber ? "_blank" : "_self"}
-                    rel="noopener noreferrer"
-                    className="w-full py-4 rounded-xl font-bold transition-all duration-300 flex items-center justify-center text-center"
-                    style={{ 
-                      backgroundColor: pkg.popular ? pkg.color : 'rgba(255,255,255,0.05)',
-                      color: pkg.popular ? '#fff' : pkg.color,
-                      border: pkg.popular ? 'none' : `1px solid ${pkg.color}40`
-                    }}
-                    onMouseEnter={(e) => {
-                      if (!pkg.popular) e.currentTarget.style.backgroundColor = `${pkg.color}15`;
-                    }}
-                    onMouseLeave={(e) => {
-                      if (!pkg.popular) e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.05)';
-                    }}
-                  >
-                    {pkg.buttonLabel}
-                  </a>
-                ) : (
-                  <button 
-                    className="w-full py-4 rounded-xl font-bold transition-all duration-300"
-                    style={{ 
-                      backgroundColor: pkg.popular ? pkg.color : 'rgba(255,255,255,0.05)',
-                      color: pkg.popular ? '#fff' : pkg.color,
-                      border: pkg.popular ? 'none' : `1px solid ${pkg.color}40`
-                    }}
-                    onMouseEnter={(e) => {
-                      if (!pkg.popular) e.currentTarget.style.backgroundColor = `${pkg.color}15`;
-                    }}
-                    onMouseLeave={(e) => {
-                      if (!pkg.popular) e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.05)';
-                    }}
-                  >
-                    {pkg.buttonLabel}
-                  </button>
-                )}
+                <button 
+                  onClick={() => triggerBookingModal(pkg.buttonLabel.includes('تواصل') || pkg.contactLink ? 'استشارة عامة' : `باقة الأسعار - ${pkg.name}`)}
+                  className="w-full py-4 rounded-xl font-bold transition-all duration-300 flex items-center justify-center text-center cursor-pointer"
+                  style={{ 
+                    backgroundColor: pkg.popular ? pkg.color : 'rgba(255,255,255,0.05)',
+                    color: pkg.popular ? '#fff' : pkg.color,
+                    border: pkg.popular ? 'none' : `1px solid ${pkg.color}40`
+                  }}
+                  onMouseEnter={(e) => {
+                    if (!pkg.popular) e.currentTarget.style.backgroundColor = `${pkg.color}15`;
+                  }}
+                  onMouseLeave={(e) => {
+                    if (!pkg.popular) e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.05)';
+                  }}
+                >
+                  {pkg.buttonLabel}
+                </button>
               </motion.div>
             ))}
           </div>

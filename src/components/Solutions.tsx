@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useSite } from '../context/SiteContext';
+import { triggerBookingModal } from './BookingModal';
 import { motion, AnimatePresence } from 'motion/react';
 import { ChevronDown } from 'lucide-react';
 import branchImg from '../assets/images/regenerated_image_1779062361308.png';
@@ -215,12 +216,12 @@ export const Solutions = () => {
                     }}
                   />
                 </div>
-                <a 
-                  href="#contact" 
-                  className="mt-4 px-6 py-2.5 bg-[color:var(--color-brand-blue-val)] hover:brightness-110 text-white rounded-full font-bold text-sm shadow-[0_0_15px_rgba(43,194,194,0.3)] transition-transform hover:-translate-y-1 block text-center"
+                 <button 
+                  onClick={() => triggerBookingModal('البائع الذكي للفروع')} 
+                  className="mt-4 w-full px-6 py-2.5 bg-[color:var(--color-brand-blue-val)] hover:brightness-110 text-white rounded-full font-bold text-sm shadow-[0_0_15px_rgba(43,194,194,0.3)] transition-transform hover:-translate-y-1 block text-center cursor-pointer"
                 >
                   كن أول من يحصل على الخدمة
-                </a>
+                </button>
               </div>
               
               <h3 className="text-2xl md:text-3xl font-bold mb-4 text-[color:var(--color-text-main)] text-shadow-sm">البائع الذكي للفروع</h3>
@@ -304,12 +305,12 @@ export const Solutions = () => {
                     }}
                   />
                 </div>
-                <a 
-                  href="#contact" 
-                  className="mt-4 px-6 py-2.5 bg-[color:var(--color-brand-purple-val)] hover:brightness-110 text-white rounded-full font-bold text-sm shadow-[0_0_15px_rgba(19,80,91,0.3)] transition-transform hover:-translate-y-1 block text-center"
+                 <button 
+                  onClick={() => triggerBookingModal('البائع الذكي للمتاجر الإلكترونية')} 
+                  className="mt-4 w-full px-6 py-2.5 bg-[color:var(--color-brand-purple-val)] hover:brightness-110 text-white rounded-full font-bold text-sm shadow-[0_0_15px_rgba(19,80,91,0.3)] transition-transform hover:-translate-y-1 block text-center cursor-pointer"
                 >
                   تواصل معنا
-                </a>
+                </button>
               </div>
               
               <h3 className="text-2xl md:text-3xl font-bold mb-4 text-[color:var(--color-text-main)] text-shadow-sm">البائع الذكي للمتاجر الإلكترونية</h3>
