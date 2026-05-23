@@ -26,6 +26,15 @@
   background-size: 300% 300%;
 }
 
+.scrollbar-hide::-webkit-scrollbar {
+  display: none !important;
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none !important;
+  scrollbar-width: none !important;
+}
+
 :root {
   --color-brand-blue-val: #2bc2c2; /* Cyan */
   --color-brand-purple-val: #13505b; /* Dark Teal */

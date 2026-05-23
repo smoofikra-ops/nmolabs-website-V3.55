@@ -189,14 +189,14 @@ export const Solutions = () => {
           </motion.p>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-8 lg:gap-12 relative items-start">
+        <div className="flex md:grid md:grid-cols-2 overflow-x-auto md:overflow-x-visible snap-x snap-mandatory scrollbar-hide gap-8 lg:gap-12 relative items-start pb-4 w-full px-2">
           
           {/* Card 1: Retail Branches */}
           <motion.div 
             initial={{ opacity: 0, x: 50 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
-            className="p-8 md:p-10 rounded-3xl border border-black/80 bg-black/40 relative overflow-hidden group hover:-translate-y-1 hover:shadow-[0_0_50px_rgba(79,142,247,0.15)] transition-all duration-500 shadow-[inset_0_4px_12px_rgba(0,0,0,0.8),0_1px_1px_rgba(255,255,255,0.05)]"
+            className="snap-center shrink-0 w-[85vw] md:w-auto p-8 md:p-10 rounded-3xl border border-black/80 bg-black/40 relative overflow-hidden group hover:-translate-y-1 hover:shadow-[0_0_50px_rgba(79,142,247,0.15)] transition-all duration-500 shadow-[inset_0_4px_12px_rgba(0,0,0,0.8),0_1px_1px_rgba(255,255,255,0.05)]"
           >
             <div className="absolute top-0 right-0 w-64 h-64 bg-[color:var(--color-brand-blue-val)] opacity-10 blur-[60px] rounded-full group-hover:opacity-20 transition-all duration-700 pointer-events-none" />
             
@@ -285,7 +285,7 @@ export const Solutions = () => {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.2 }}
-            className="p-8 md:p-10 rounded-3xl border border-black/80 bg-black/40 relative overflow-hidden group hover:-translate-y-1 hover:shadow-[0_0_50px_rgba(124,58,237,0.15)] transition-all duration-500 shadow-[inset_0_4px_12px_rgba(0,0,0,0.8),0_1px_1px_rgba(255,255,255,0.05)]"
+            className="snap-center shrink-0 w-[85vw] md:w-auto p-8 md:p-10 rounded-3xl border border-black/80 bg-black/40 relative overflow-hidden group hover:-translate-y-1 hover:shadow-[0_0_50px_rgba(124,58,237,0.15)] transition-all duration-500 shadow-[inset_0_4px_12px_rgba(0,0,0,0.8),0_1px_1px_rgba(255,255,255,0.05)]"
           >
             <div className="absolute top-0 right-0 w-64 h-64 bg-[color:var(--color-brand-purple-val)] opacity-10 blur-[60px] rounded-full group-hover:opacity-20 transition-all duration-700 pointer-events-none" />
             
@@ -405,15 +405,15 @@ export const Solutions = () => {
             </div>
             
             <div className="w-full md:w-1/3 flex flex-col items-center justify-center gap-6 relative">
-              <div className="absolute inset-0 bg-[color:var(--color-brand-blue-val)] opacity-20 blur-[60px] rounded-full animate-pulse pointer-events-none" />
-              <div className="grid grid-cols-2 gap-4 relative z-10 w-full max-w-[280px]">
-                <div className="bg-white/5 border border-white/10 rounded-2xl p-4 flex flex-col items-center justify-center gap-3 hover:bg-white/10 hover:border-blue-500/50 transition-all shadow-lg transform hover:-translate-y-1">
-                  <img src={sallaLogo} alt="Salla" className="w-12 h-12 object-contain opacity-80" />
-                  <span className="text-xs font-bold text-gray-400">سلة</span>
+              <div className="absolute inset-0 bg-[color:var(--color-brand-blue-val)] opacity-15 blur-[60px] rounded-full animate-pulse pointer-events-none" />
+              <div className="grid grid-cols-2 gap-4 relative z-10 w-full max-w-[340px]">
+                <div className="bg-[#0c1619] border-2 border-[#2bc2c2]/20 hover:border-[#2bc2c2]/60 rounded-2xl p-6 flex flex-col items-center justify-center gap-3 hover:bg-[#0c1619]/80 transition-all shadow-[0_0_20px_rgba(43,194,194,0.15)] hover:shadow-[0_0_30px_rgba(43,194,194,0.35)] transform hover:-translate-y-1">
+                  <img src={sallaLogo} alt="Salla" className="w-20 h-20 object-contain" />
+                  <span className="text-sm font-bold text-gray-200">سلة</span>
                 </div>
-                <div className="bg-white/5 border border-white/10 rounded-2xl p-4 flex flex-col items-center justify-center gap-3 hover:bg-white/10 hover:border-purple-500/50 transition-all shadow-lg transform hover:-translate-y-1">
-                  <img src={zidLogo} alt="Zid" className="w-12 h-12 object-contain opacity-80" />
-                  <span className="text-xs font-bold text-gray-400">زد</span>
+                <div className="bg-[#140b19] border-2 border-[#7C3AED]/20 hover:border-[#7C3AED]/60 rounded-2xl p-6 flex flex-col items-center justify-center gap-3 hover:bg-[#140b19]/80 transition-all shadow-[0_0_20px_rgba(124,58,237,0.15)] hover:shadow-[0_0_30px_rgba(124,58,237,0.35)] transform hover:-translate-y-1">
+                  <img src={zidLogo} alt="Zid" className="w-20 h-20 object-contain" />
+                  <span className="text-sm font-bold text-gray-200">زد</span>
                 </div>
               </div>
             </div>

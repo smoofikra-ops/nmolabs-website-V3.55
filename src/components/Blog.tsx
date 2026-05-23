@@ -88,11 +88,11 @@ export const Blog = () => {
         </div>
 
         <div className="max-w-7xl mx-auto px-6">
-          <div className="flex flex-col gap-6">
+          <div className="flex overflow-x-auto snap-x snap-mandatory scrollbar-hide gap-6 pb-4 w-full px-2">
             {blogPosts.map((post) => (
               <div 
                 key={post.id} 
-                className="w-full bg-black/40 border border-white/10 rounded-2xl overflow-hidden hover:border-[color:var(--color-brand-blue-val)] transition-all duration-300 flex flex-col text-right shadow-[inset_0_2px_4px_rgba(0,0,0,0.5)]"
+                className="snap-center shrink-0 w-[85vw] bg-black/40 border border-white/10 rounded-2xl overflow-hidden hover:border-[color:var(--color-brand-blue-val)] transition-all duration-300 flex flex-col text-right shadow-[inset_0_2px_4px_rgba(0,0,0,0.5)]"
                 dir="rtl"
               >
                 <div className="h-52 overflow-hidden relative border-b border-white/5">

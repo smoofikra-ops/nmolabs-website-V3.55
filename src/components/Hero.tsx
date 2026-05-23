@@ -85,6 +85,14 @@ export const Hero = () => {
     }
   }, [config.heroVideoPlaybackRate]);
 
+  useEffect(() => {
+    if (videoRef.current && isInView && shouldLoadVideo) {
+      videoRef.current.play().catch(err => {
+        console.warn("Mobile autoplay video play request was prevented: ", err);
+      });
+    }
+  }, [isInView, shouldLoadVideo]);
+
   if (!config.sections.hero) return null;
 
   const handleScan = async () => {
@@ -269,22 +277,22 @@ export const Hero = () => {
             <TypewriterText text={heroContent.description} />
           </p>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 mb-12 md:mb-16 max-w-5xl mx-auto">
-            <div className="p-6 md:p-8 rounded-3xl border border-black/80 bg-black/40 text-center flex flex-col items-center justify-center transform hover:-translate-y-1 hover:scale-105 transition-all duration-300 shadow-[inset_0_4px_12px_rgba(0,0,0,0.8),0_1px_1px_rgba(255,255,255,0.05)] cursor-default">
+          <div className="flex md:grid md:grid-cols-3 overflow-x-auto md:overflow-x-visible snap-x snap-mandatory scrollbar-hide gap-4 md:gap-6 mb-12 md:mb-16 max-w-5xl mx-auto w-full px-2">
+            <div className="snap-center shrink-0 w-[85vw] md:w-auto p-6 md:p-8 rounded-3xl border border-white/10 bg-black/40 text-center flex flex-col items-center justify-center transform hover:-translate-y-1 hover:scale-105 transition-all duration-300 shadow-[inset_0_4px_12px_rgba(0,0,0,0.8),0_1px_1px_rgba(255,255,255,0.05)] cursor-default">
               <div className="w-14 h-14 md:w-16 md:h-16 rounded-2xl bg-black/50 shadow-[inset_0_2px_8px_rgba(0,0,0,0.9),0_1px_0_rgba(255,255,255,0.05)] border border-black flex items-center justify-center mb-4 md:mb-5 mx-auto">
                 <Users className="w-6 h-6 md:w-8 md:h-8 text-[color:var(--color-brand-blue-val)] drop-shadow-[0_0_8px_rgba(79,142,247,0.5)]" />
               </div>
               <h3 className="text-lg md:text-xl font-bold text-white mb-2 md:mb-3 text-shadow-sm">الزوار يدخلون... وما يشترون</h3>
               <p className="text-[#9ca3af] text-xs md:text-sm leading-relaxed max-w-[250px] md:max-w-none mx-auto">معدل التحويل منخفض والعملاء يطلعون بدون شراء</p>
             </div>
-            <div className="p-6 md:p-8 rounded-3xl border border-black/80 bg-black/40 text-center flex flex-col items-center justify-center transform hover:-translate-y-1 hover:scale-105 transition-all duration-300 shadow-[inset_0_4px_12px_rgba(0,0,0,0.8),0_1px_1px_rgba(255,255,255,0.05)] cursor-default">
+            <div className="snap-center shrink-0 w-[85vw] md:w-auto p-6 md:p-8 rounded-3xl border border-white/10 bg-black/40 text-center flex flex-col items-center justify-center transform hover:-translate-y-1 hover:scale-105 transition-all duration-300 shadow-[inset_0_4px_12px_rgba(0,0,0,0.8),0_1px_1px_rgba(255,255,255,0.05)] cursor-default">
               <div className="w-14 h-14 md:w-16 md:h-16 rounded-2xl bg-black/50 shadow-[inset_0_2px_8px_rgba(0,0,0,0.9),0_1px_0_rgba(255,255,255,0.05)] border border-black flex items-center justify-center mb-4 md:mb-5 mx-auto">
                 <Target className="w-6 h-6 md:w-8 md:h-8 text-[color:var(--color-brand-blue-val)] drop-shadow-[0_0_8px_rgba(79,142,247,0.5)]" />
               </div>
               <h3 className="text-lg md:text-xl font-bold text-white mb-2 md:mb-3 text-shadow-sm">العميل يتردد... ويطلع</h3>
               <p className="text-[#9ca3af] text-xs md:text-sm leading-relaxed max-w-[250px] md:max-w-none mx-auto">مشاكل في تجربة المستخدم تخلي العميل يشك ويترك المتجر</p>
             </div>
-            <div className="p-6 md:p-8 rounded-3xl border border-black/80 bg-black/40 text-center flex flex-col items-center justify-center transform hover:-translate-y-1 hover:scale-105 transition-all duration-300 shadow-[inset_0_4px_12px_rgba(0,0,0,0.8),0_1px_1px_rgba(255,255,255,0.05)] cursor-default">
+            <div className="snap-center shrink-0 w-[85vw] md:w-auto p-6 md:p-8 rounded-3xl border border-white/10 bg-black/40 text-center flex flex-col items-center justify-center transform hover:-translate-y-1 hover:scale-105 transition-all duration-300 shadow-[inset_0_4px_12px_rgba(0,0,0,0.8),0_1px_1px_rgba(255,255,255,0.05)] cursor-default">
               <div className="w-14 h-14 md:w-16 md:h-16 rounded-2xl bg-black/50 shadow-[inset_0_2px_8px_rgba(0,0,0,0.9),0_1px_0_rgba(255,255,255,0.05)] border border-black flex items-center justify-center mb-4 md:mb-5 mx-auto">
                 <TrendingUp className="w-6 h-6 md:w-8 md:h-8 text-[color:var(--color-brand-blue-val)] drop-shadow-[0_0_8px_rgba(79,142,247,0.5)]" />
               </div>
@@ -295,13 +303,15 @@ export const Hero = () => {
 
           <div className="max-w-xl mx-auto md:ml-auto md:mr-12 relative group z-20">
             <div className={`absolute -inset-1 rounded-2xl blur opacity-70 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-pulse`} style={{ background: `linear-gradient(90deg, ${config.primaryColor}, ${config.accentColor}, ${config.primaryColor})`, backgroundSize: '200% 100%' }}></div>
-            <div className="relative flex flex-row max-md:flex-col items-center max-md:items-stretch bg-[color:var(--color-brand-dark)] backdrop-blur-xl border-2 border-transparent rounded-2xl p-1.5 md:p-2 md:pl-2 max-md:gap-2 shadow-2xl transition-all duration-300 focus-within:border-[color:var(--color-brand-blue-val)]">
+            
+            {/* Desktop Version (Inline layout) */}
+            <div className="hidden md:flex flex-row items-center bg-[color:var(--color-brand-dark)] backdrop-blur-xl border border-white/10 rounded-2xl p-1.5 md:p-2 md:pl-2 shadow-2xl focus-within:border-[color:var(--color-brand-blue-val)] w-full">
               <input 
                 type="url" 
                 value={url}
                 onChange={(e) => setUrl(e.target.value)}
                 placeholder="https://yourstore.com"
-                className="flex-1 bg-transparent border-none outline-none text-white px-3 md:px-4 font-english text-sm md:text-lg placeholder-[color:var(--color-text-muted)] text-left w-full focus:ring-0 min-w-0 max-md:py-3"
+                className="flex-1 bg-transparent border-none outline-none text-white px-3 md:px-4 font-english text-sm md:text-lg placeholder-[color:var(--color-text-muted)] text-left focus:ring-0 min-w-0"
                 dir="ltr"
                 disabled={isScanning}
                 onKeyDown={(e) => {
@@ -311,7 +321,7 @@ export const Hero = () => {
               <button
                 onClick={handleScan}
                 disabled={isScanning || !url}
-                className="shrink-0 flex items-center justify-center gap-1.5 md:gap-2 h-12 md:h-14 px-5 md:px-8 rounded-xl font-bold text-sm md:text-lg text-white transition-all duration-300 disabled:opacity-50 relative overflow-hidden shadow-[0_0_20px_rgba(79,142,247,0.5)] hover:shadow-[0_0_30px_rgba(79,142,247,0.8)] hover:animate-pulse hover:scale-105 max-md:w-full"
+                className="shrink-0 flex items-center justify-center gap-1.5 md:gap-2 h-12 md:h-14 px-5 md:px-8 rounded-xl font-bold text-sm md:text-lg text-white transition-all duration-300 disabled:opacity-50 relative overflow-hidden shadow-[0_0_20px_rgba(79,142,247,0.5)] hover:shadow-[0_0_30px_rgba(79,142,247,0.8)] hover:scale-105"
                 style={{ backgroundColor: config.primaryColor }}
               >
                 {isScanning ? (
@@ -323,6 +333,45 @@ export const Hero = () => {
                   <>
                     {heroContent.ctaText}
                     <ArrowLeft size={20} className="rotate-180 animate-bounce" />
+                  </>
+                )}
+              </button>
+            </div>
+
+            {/* Mobile Version (Independent Input & Centered Gradient Button Underneath) */}
+            <div className="flex md:hidden flex-col gap-4 w-full px-2">
+              <div className="relative rounded-2xl p-[1px] bg-black/40 border border-white/10 shadow-[inset_0_2px_4px_rgba(0,0,0,0.5)]">
+                <input 
+                  type="url" 
+                  value={url}
+                  onChange={(e) => setUrl(e.target.value)}
+                  placeholder="https://yourstore.com"
+                  className="w-full bg-transparent border-none outline-none text-white px-4 py-4 rounded-2xl font-english text-base placeholder-[color:var(--color-text-muted)] text-center focus:ring-0 focus:ring-offset-0 focus:border-transparent"
+                  dir="ltr"
+                  disabled={isScanning}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') handleScan();
+                  }}
+                />
+              </div>
+              <button
+                onClick={handleScan}
+                disabled={isScanning || !url}
+                className="w-full py-4 rounded-2xl font-bold text-base text-white transition-all duration-300 flex items-center justify-center gap-2 relative overflow-hidden shadow-lg border border-white/10 active:scale-95 active:brightness-110"
+                style={{ 
+                  background: `linear-gradient(135deg, ${config.primaryColor} 0%, ${config.accentColor} 100%)`,
+                  boxShadow: `0 4px 20px ${config.primaryColor}40`
+                }}
+              >
+                {isScanning ? (
+                  <span className="flex items-center gap-2 font-english">
+                    جاري الفحص {scanProgress}% 
+                    <ScanLine size={18} className="animate-pulse" />
+                  </span>
+                ) : (
+                  <>
+                    {heroContent.ctaText}
+                    <ArrowLeft size={18} className="rotate-180 shrink-0" />
                   </>
                 )}
               </button>

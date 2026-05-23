@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useSite } from '../context/SiteContext';
 import { useContent } from '../context/ContentContext';
 import { motion, AnimatePresence } from 'motion/react';
 import { Lock, Activity, LineChart, Target, Hash, CheckSquare, Search, Code, Link as LinkIcon, Share2, PenTool, Calendar, Headphones, MessageSquare, Wrench, Zap, Type, MessageCircle, ChevronDown, CheckCircle2, AlertTriangle, MapPin, Layout } from 'lucide-react';
 import { ToolAnalyzerModal } from './ToolAnalyzerModal';
+import { triggerBookingModal } from './BookingModal';
 
 const IconMapper = ({ name, className }: { name: string, className?: string }) => {
   switch (name) {
@@ -49,12 +50,92 @@ const getToolDescription = (name: string) => {
   }
 };
 
+const getToolTheme = (index: number, locked: boolean) => {
+  if (locked) {
+    return {
+      border: 'border-white/5 hover:border-white/20',
+      glow: 'shadow-[inset_0_2px_10px_rgba(0,0,0,0.8)] hover:shadow-[0_0_25px_rgba(255,255,255,0.05),inset_0_2px_10px_rgba(0,0,0,0.8)]',
+      text: 'text-gray-400',
+      iconBg: 'bg-black/60 shadow-[inset_0_2px_4px_rgba(0,0,0,0.5)] border border-white/5',
+      badge: 'text-[#7c3aed] bg-[#7c3aed]/10 border-[#7c3aed]/20',
+      iconColor: 'text-gray-400'
+    };
+  }
+  
+  const themes = [
+    {
+      border: 'border-[#2bc2c2]/20 hover:border-[#2bc2c2]/50',
+      glow: 'shadow-[0_0_20px_rgba(43,194,194,0.05),inset_0_4px_12px_rgba(0,0,0,0.9)] hover:shadow-[0_0_30px_rgba(43,194,194,0.25),inset_0_4px_12px_rgba(0,0,0,0.9)]',
+      text: 'text-[#2bc2c2]',
+      iconBg: 'bg-[#2bc2c2]/10 group-hover/card:bg-[#2bc2c2]/20 border border-[#2bc2c2]/10',
+      badge: 'text-[#2bc2c2] bg-[#2bc2c2]/10 border-[#2bc2c2]/20',
+      iconColor: 'text-[#2bc2c2]'
+    },
+    {
+      border: 'border-[#7C3AED]/20 hover:border-[#7C3AED]/50',
+      glow: 'shadow-[0_0_20px_rgba(124,58,237,0.05),inset_0_4px_12px_rgba(0,0,0,0.9)] hover:shadow-[0_0_30px_rgba(124,58,237,0.25),inset_0_4px_12px_rgba(0,0,0,0.9)]',
+      text: 'text-[#7C3AED]',
+      iconBg: 'bg-[#7C3AED]/10 group-hover/card:bg-[#7C3AED]/20 border border-[#7C3AED]/10',
+      badge: 'text-[#7C3AED] bg-[#7C3AED]/10 border-[#7C3AED]/20',
+      iconColor: 'text-[#7C3AED]'
+    },
+    {
+      border: 'border-[#22d3a0]/20 hover:border-[#22d3a0]/50',
+      glow: 'shadow-[0_0_20px_rgba(34,211,160,0.05),inset_0_4px_12px_rgba(0,0,0,0.9)] hover:shadow-[0_0_30px_rgba(34,211,160,0.25),inset_0_4px_12px_rgba(0,0,0,0.9)]',
+      text: 'text-[#22d3a0]',
+      iconBg: 'bg-[#22d3a0]/10 group-hover/card:bg-[#22d3a0]/20 border border-[#22d3a0]/10',
+      badge: 'text-[#22d3a0] bg-[#22d3a0]/10 border-[#22d3a0]/20',
+      iconColor: 'text-[#22d3a0]'
+    },
+    {
+      border: 'border-[#f43f5e]/20 hover:border-[#f43f5e]/50',
+      glow: 'shadow-[0_0_20px_rgba(244,63,94,0.05),inset_0_4px_12px_rgba(0,0,0,0.9)] hover:shadow-[0_0_30px_rgba(244,63,94,0.25),inset_0_4px_12px_rgba(0,0,0,0.9)]',
+      text: 'text-[#f43f5e]',
+      iconBg: 'bg-[#f43f5e]/10 group-hover/card:bg-[#f43f5e]/20 border border-[#f43f5e]/10',
+      badge: 'text-[#f43f5e] bg-[#f43f5e]/10 border-[#f43f5e]/20',
+      iconColor: 'text-[#f43f5e]'
+    }
+  ];
+  return themes[index % themes.length];
+};
+
 export const ToolsGrid = () => {
   const { config } = useSite();
   const { content } = useContent();
   const [openIndex, setOpenIndex] = useState<number | null>(0);
   const [selectedTool, setSelectedTool] = useState<any>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isPaused, setIsPaused] = useState(false);
+  const categoriesRef = useRef<HTMLDivElement>(null);
+
+  // Auto-scroll mobile marquee effect
+  useEffect(() => {
+    const container = categoriesRef.current;
+    if (!container || window.innerWidth >= 768) return;
+
+    let animationFrameId: number;
+    const scrollSpeed = 0.5; // pixels per frame
+
+    const autoScroll = () => {
+      if (!isPaused && container) {
+        // RTL scroll moves negative. Adjusting safely.
+        container.scrollLeft -= scrollSpeed;
+        
+        // Wrap around circular logic
+        const maxScroll = container.scrollWidth - container.clientWidth;
+        if (Math.abs(container.scrollLeft) >= maxScroll - 1) {
+          container.scrollLeft = 0;
+        }
+      }
+      animationFrameId = requestAnimationFrame(autoScroll);
+    };
+
+    animationFrameId = requestAnimationFrame(autoScroll);
+
+    return () => {
+      cancelAnimationFrame(animationFrameId);
+    };
+  }, [isPaused]);
 
   const pricingPackages = content.packages.map((pkg, i) => {
     const isCustom = pkg.price.includes('أسعار') || pkg.price === 'مخصصة' || isNaN(Number(pkg.price));
@@ -97,11 +178,23 @@ export const ToolsGrid = () => {
           </motion.p>
         </div>
 
+        {/* Mobile Swipe Hint */}
+        <div className="hidden max-md:flex items-center justify-center gap-1.5 text-xs text-[color:var(--color-brand-blue-val)] mb-4 animate-pulse">
+          <span>يمكنك السحب يميناً ويساراً ↔</span>
+        </div>
+
         {/* Tools Layout (Sidebar + Grid) */}
         <div className="flex flex-col md:flex-row gap-8 lg:gap-12 max-w-7xl mx-auto mb-32" id="tools-container">
           
           {/* Categories Sidebar */}
-          <div className="w-full md:w-1/3 lg:w-1/4 flex flex-col max-md:flex-row max-md:overflow-x-auto scrollbar-hide gap-3 shrink-0 max-md:pb-4 max-md:px-1">
+          <div 
+            ref={categoriesRef}
+            onTouchStart={() => setIsPaused(true)}
+            onTouchEnd={() => setTimeout(() => setIsPaused(false), 1500)}
+            onMouseEnter={() => setIsPaused(true)}
+            onMouseLeave={() => setIsPaused(false)}
+            className="w-full md:w-1/3 lg:w-1/4 flex flex-col max-md:flex-row max-md:overflow-x-auto scrollbar-hide gap-3 shrink-0 max-md:pb-4 max-md:px-1"
+          >
             {config.toolCategories?.map((category, idx) => (
               <button
                 key={category.id || idx}
@@ -138,58 +231,56 @@ export const ToolsGrid = () => {
                   </div>
                   
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {config.toolCategories[openIndex || 0].tools.map((tool, i) => (
-                      <div 
-                        key={i} 
-                        onClick={() => {
-                          setSelectedTool(tool);
-                          setIsModalOpen(true);
-                        }}
-                        tabIndex={0}
-                        className={`relative p-8 rounded-3xl flex flex-col justify-between transition-all group/tooltip min-h-[160px] cursor-pointer focus:outline-none focus:ring-2 focus:ring-[color:var(--color-brand-blue-val)]/50 ${
-                          tool.locked 
-                            ? 'bg-black/30 border border-white/5 shadow-[inset_0_2px_10px_rgba(0,0,0,0.8)] hover:bg-black/40 hover:border-white/10' 
-                            : 'bg-black/50 shadow-[inset_0_4px_12px_rgba(0,0,0,0.9),0_1px_1px_rgba(255,255,255,0.05)] border border-black hover:border-[color:var(--color-brand-blue-val)]/30 hover:shadow-[0_0_20px_rgba(79,142,247,0.1),inset_0_4px_12px_rgba(0,0,0,0.9)]'
-                        }`}
-                      >
-                        {/* Tooltip */}
-                        <div className="absolute -top-16 left-1/2 -translate-x-1/2 opacity-0 group-hover/tooltip:opacity-100 group-focus-within/tooltip:opacity-100 transition-all duration-300 pointer-events-none z-50 transform group-hover/tooltip:-translate-y-2 group-focus-within/tooltip:-translate-y-2 w-max max-w-xs">
-                          <div className="bg-[color:var(--bg-color-darker)] backdrop-blur text-[color:var(--color-text-main)] p-3 rounded-xl shadow-xl border border-[color:var(--glass-border)] text-right">
-                            <h5 className="font-bold text-sm mb-1 text-[color:var(--color-brand-blue-val)]">{tool.name}</h5>
-                            <p className="text-xs text-[color:var(--color-text-muted)] whitespace-normal leading-relaxed">{getToolDescription(tool.name)}</p>
-                          </div>
-                        </div>
-
-                        <div className="flex items-start justify-between mb-6 relative z-10">
-                          <div>
-                            <h4 className="font-bold text-lg text-white mb-1 group-hover:text-[color:var(--color-brand-blue-val)] transition-colors">{tool.name}</h4>
-                            <p className="text-sm text-gray-500">أداة مساعدة مخصصة</p>
-                          </div>
-                          <div className={`w-14 h-14 rounded-2xl bg-black/60 shadow-[inset_0_2px_8px_rgba(0,0,0,0.6)] border border-white/5 flex items-center justify-center transition-transform duration-300 group-hover:scale-110 group-hover:bg-[color:var(--color-brand-blue-val)]/10`}>
-                            <IconMapper name={tool.iconName} className={`w-7 h-7 ${tool.iconColor || 'text-gray-400'} group-hover:text-[color:var(--color-brand-blue-val)] transition-colors`} />
-                          </div>
-                        </div>
-
-                        <div className="flex items-center justify-between mt-auto">
-                          {tool.locked ? (
-                            <div className="flex items-center gap-1.5 text-xs text-[color:var(--color-brand-purple-val)] bg-[color:var(--color-brand-purple-val)]/10 border border-[color:var(--color-brand-purple-val)]/20 px-3 py-1.5 rounded-full font-bold shadow-sm">
-                              <Lock size={12} />
-                              <span>مدفوعة</span>
+                    {config.toolCategories[openIndex || 0].tools.map((tool, i) => {
+                      const theme = getToolTheme(i, tool.locked);
+                      return (
+                        <div 
+                          key={i} 
+                          onClick={() => {
+                            setSelectedTool(tool);
+                            setIsModalOpen(true);
+                          }}
+                          tabIndex={0}
+                          className={`relative p-8 rounded-3xl flex flex-col justify-between transition-all duration-300 group/tooltip group/card min-h-[160px] cursor-pointer focus:outline-none focus:ring-2 focus:ring-[color:var(--color-brand-blue-val)]/50 bg-black/50 border ${theme.border} ${theme.glow}`}
+                        >
+                          {/* Tooltip */}
+                          <div className="absolute -top-16 left-1/2 -translate-x-1/2 opacity-0 group-hover/tooltip:opacity-100 group-focus-within/tooltip:opacity-100 transition-all duration-300 pointer-events-none z-50 transform group-hover/tooltip:-translate-y-2 group-focus-within/tooltip:-translate-y-2 w-max max-w-xs">
+                            <div className="bg-[color:var(--bg-color-darker)] backdrop-blur text-[color:var(--color-text-main)] p-3 rounded-xl shadow-xl border border-[color:var(--glass-border)] text-right">
+                              <h5 className="font-bold text-sm mb-1 text-[color:var(--color-brand-blue-val)]">{tool.name}</h5>
+                              <p className="text-xs text-[color:var(--color-text-muted)] whitespace-normal leading-relaxed">{getToolDescription(tool.name)}</p>
                             </div>
-                          ) : (
-                            <div className="flex items-center gap-1.5 text-xs text-[color:var(--color-brand-green-val)] bg-[color:var(--color-brand-green-val)]/10 border border-[color:var(--color-brand-green-val)]/20 px-3 py-1.5 rounded-full font-bold shadow-sm">
-                              <Zap size={12} />
-                              <span>أداة مجانية</span>
+                          </div>
+
+                          <div className="flex items-start justify-between mb-6 relative z-10">
+                            <div>
+                              <h4 className="font-bold text-lg text-white mb-1 group-hover/card:text-[color:var(--color-brand-blue-val)] transition-colors">{tool.name}</h4>
+                              <p className="text-sm text-gray-500">أداة مساعدة مخصصة</p>
                             </div>
-                          )}
-                          
-                          <div className={`w-8 h-8 rounded-full flex items-center justify-center bg-white/5 opacity-0 group-hover:opacity-100 transition-opacity ${tool.locked ? 'text-[color:var(--color-brand-purple-val)]' : 'text-[color:var(--color-brand-blue-val)]'}`}>
-                            <Lock size={14} className={tool.locked ? 'block' : 'hidden'} />
-                            <Zap size={14} className={tool.locked ? 'hidden' : 'block'} />
+                            <div className={`w-14 h-14 rounded-2xl ${theme.iconBg} flex items-center justify-center transition-transform duration-300 group-hover/card:scale-110`}>
+                              <IconMapper name={tool.iconName} className={`w-7 h-7 ${theme.iconColor} transition-colors`} />
+                            </div>
+                          </div>
+
+                          <div className="flex items-center justify-between mt-auto">
+                            {tool.locked ? (
+                              <div className="flex items-center gap-1.5 text-xs text-[#7c3aed] bg-[#7c3aed]/10 border border-[#7c3aed]/20 px-3 py-1.5 rounded-full font-bold shadow-sm">
+                                <Lock size={12} />
+                                <span>مدفوعة</span>
+                              </div>
+                            ) : (
+                              <div className="flex items-center gap-1.5 text-xs text-[#22d3a0] bg-[#22d3a0]/10 border border-[#22d3a0]/20 px-3 py-1.5 rounded-full font-bold shadow-sm">
+                                <Zap size={12} />
+                                <span>أداة مجانية</span>
+                              </div>
+                            )}
+                            
+                            <div className="w-8 h-8 rounded-full flex items-center justify-center bg-white/5 opacity-0 group-hover/card:opacity-100 transition-opacity text-white">
+                              {tool.locked ? <Lock size={14} /> : <Zap size={14} />}
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    ))}
+                      );
+                    })}
                   </div>
                 </motion.div>
               )}
@@ -204,7 +295,7 @@ export const ToolsGrid = () => {
             <p className="text-gray-400">اختر الباقة التي تناسب حجم نشاطك</p>
           </div>
           
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="flex md:grid md:grid-cols-2 lg:grid-cols-4 overflow-x-auto md:overflow-x-visible snap-x snap-mandatory scrollbar-hide gap-8 pb-4 w-full px-2">
             {pricingPackages.map((pkg, i) => (
               <motion.div
                 key={i}
@@ -213,7 +304,7 @@ export const ToolsGrid = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.1 }}
-                className={`bg-black/40 relative rounded-3xl p-8 border ${pkg.popular ? 'border-[color:var(--color-brand-blue-val)] shadow-[0_0_30px_rgba(79,142,247,0.15)] transform md:-translate-y-4' : 'border-[color:var(--glass-border)] shadow-[inset_0_4px_12px_rgba(0,0,0,0.8),0_1px_1px_rgba(255,255,255,0.05)]'} flex flex-col h-full`}
+                className={`snap-center shrink-0 w-[85vw] md:w-auto bg-black/40 relative rounded-3xl p-8 border ${pkg.popular ? 'border-[color:var(--color-brand-blue-val)] shadow-[0_0_30px_rgba(79,142,247,0.15)] transform md:-translate-y-4' : 'border-[color:var(--glass-border)] shadow-[inset_0_4px_12px_rgba(0,0,0,0.8),0_1px_1px_rgba(255,255,255,0.05)]'} flex flex-col h-full`}
               >
                 {pkg.popular && (
                   <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 px-4 py-1 bg-[color:var(--color-brand-blue-val)] text-white text-xs font-bold rounded-full">

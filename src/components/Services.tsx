@@ -113,20 +113,21 @@ export const Services = () => {
           </motion.p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="flex md:grid md:grid-cols-2 lg:grid-cols-3 overflow-x-auto md:overflow-x-visible snap-x snap-mandatory scrollbar-hide gap-6 pb-4 w-full px-2">
           {services.map((service, index) => {
             const serviceIcon = getServiceIcon(service.icon);
             return (
               <motion.div
                 key={service.id}
                 style={{ y: isMobile ? 0 : (index % 3 === 0 ? y1 : index % 3 === 1 ? y2 : y3) }}
+                className="snap-center shrink-0 w-[85vw] md:w-auto flex-1 flex flex-col h-full"
               >
                 <motion.div 
                   initial={{ opacity: 0, scale: 0.9 }}
                   whileInView={{ opacity: 1, scale: 1 }}
                   viewport={{ once: true }}
                   transition={{ delay: index * 0.1 }}
-                  className="hover:-translate-y-2 transition-all duration-500 rounded-3xl overflow-hidden group relative flex flex-col h-full shadow-[inset_0_4px_12px_rgba(0,0,0,0.8),0_1px_1px_rgba(255,255,255,0.05)] border border-white/5 hover:border-[color:var(--color-brand-blue-val)] hover:shadow-[inset_0_4px_15px_rgba(0,0,0,1),0_0_20px_rgba(79,142,247,0.3)] bg-black/40"
+                  className="hover:-translate-y-2 transition-all duration-500 rounded-3xl overflow-hidden group relative flex flex-col h-full shadow-[inset_0_4px_12px_rgba(0,0,0,0.8),0_1px_1px_rgba(255,255,255,0.05)] border-2 border-white/5 hover:border-[color:var(--color-brand-blue-val)] hover:shadow-[inset_0_4px_15px_rgba(0,0,0,1),0_0_20px_rgba(79,142,247,0.3)] bg-black/40 w-full"
                 >
                   {/* Hover Glow effect */}
                   <div className="absolute inset-0 bg-gradient-to-br from-[color:var(--color-brand-blue-val)] to-[color:var(--color-brand-purple-val)] opacity-0 group-hover:opacity-10 transition-opacity duration-500 pointer-events-none z-0" />
@@ -170,7 +171,7 @@ export const Services = () => {
       <AnimatePresence>
         {openId !== null && activeService && (
           <div 
-            className="fixed inset-0 z-[200] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 rtl"
+            className="fixed inset-0 z-[200] flex items-center justify-center bg-[#030307]/97 backdrop-blur-[2px] p-4 rtl"
             onClick={() => setOpenId(null)}
           >
             <motion.div 
@@ -178,13 +179,13 @@ export const Services = () => {
                animate={{ opacity: 1, scale: 1, y: 0 }}
                exit={{ opacity: 0, scale: 0.95, y: 20 }}
                onClick={(e) => e.stopPropagation()}
-               className={`bg-[color:var(--color-brand-darker)] border border-white/10 rounded-3xl w-full ${isStoreService ? 'max-w-6xl' : 'max-w-2xl'} overflow-hidden shadow-2xl relative flex flex-col max-h-[95vh] md:max-h-[90vh]`}
+               className={`bg-[#080812] border-2 border-white/15 rounded-[24px] w-full ${isStoreService ? 'max-w-6xl' : 'max-w-2xl'} overflow-hidden shadow-[0_0_50px_rgba(79,142,247,0.25)] relative flex flex-col max-h-[90vh]`}
             >
                {/* Modal Header */}
-               <div className="p-6 pb-6 border-b border-white/10 flex justify-between items-start sticky top-0 bg-[color:var(--color-brand-darker)] z-10">
+               <div className="p-6 pb-6 border-b border-white/10 flex justify-between items-start sticky top-0 bg-[#080812] z-10">
                  <div className="flex flex-col gap-2">
                    <div 
-                     className="p-3 w-max rounded-xl text-[color:var(--color-brand-blue-val)] bg-[color:var(--color-brand-blue-val)]/10 mb-2"
+                     className="p-3 w-max rounded-xl text-[color:var(--color-brand-blue-val)] bg-[color:var(--color-brand-blue-val)]/10 mb-2 border border-white/5"
                    >
                      {getServiceIcon(activeService.icon)}
                    </div>
@@ -192,9 +193,10 @@ export const Services = () => {
                  </div>
                  <button 
                    onClick={() => setOpenId(null)}
-                   className="p-2 text-gray-400 hover:text-white hover:bg-white/10 rounded-full transition-colors cursor-pointer"
+                   className="p-3 text-white bg-white/5 hover:bg-white/20 border border-white/10 rounded-full transition-all cursor-pointer shadow-lg flex items-center justify-center"
+                   aria-label="إغلاق"
                  >
-                   <X size={24} />
+                   <X size={20} />
                  </button>
                </div>
 
