@@ -68,7 +68,6 @@ export const Testimonials = () => {
       </div>
 
       {/* Infinite Marquee */}
-      {/* Infinite Marquee */}
       {basePartners.length > 0 && (
         <div className="relative w-full flex overflow-x-hidden py-10 md:py-20 z-10 group" dir="ltr">
           <div className="absolute top-0 bottom-0 left-0 w-32 bg-gradient-to-r from-[color:var(--color-brand-dark)] to-transparent z-20 pointer-events-none" />
@@ -82,16 +81,14 @@ export const Testimonials = () => {
                 style={{ '--partner-color': partner.color || 'var(--color-brand-blue-val)' } as React.CSSProperties}
               >
                 {/* Tooltip */}
-                {!imageError && (
-                  <div className="absolute -top-14 left-1/2 -translate-x-1/2 opacity-0 group-hover/partner:opacity-100 transition-all duration-300 pointer-events-none z-50 transform group-hover/partner:-translate-y-2 w-max max-w-[250px]">
-                    <div 
-                      className="bg-black/90 backdrop-blur text-white px-4 py-2 rounded-xl text-sm font-bold border border-white/10 text-center break-words"
-                      style={{ boxShadow: `0 0 15px ${partner.color || 'var(--color-brand-blue-val)'}` }}
-                    >
-                      {partner.name}
-                    </div>
+                <div className="absolute -top-14 left-1/2 -translate-x-1/2 opacity-0 group-hover/partner:opacity-100 transition-all duration-300 pointer-events-none z-50 transform group-hover/partner:-translate-y-2 w-max max-w-[250px]">
+                  <div 
+                    className="bg-black/90 backdrop-blur text-white px-4 py-2 rounded-xl text-sm font-bold border border-white/10 text-center break-words"
+                    style={{ boxShadow: `0 0 15px ${partner.color || 'var(--color-brand-blue-val)'}` }}
+                  >
+                    {partner.name}
                   </div>
-                )}
+                </div>
 
                 {/* Logo Container */}
                 <div
@@ -129,16 +126,14 @@ export const Testimonials = () => {
                 style={{ '--partner-color': partner.color || 'var(--color-brand-blue-val)' } as React.CSSProperties}
               >
                 {/* Tooltip */}
-                {!imageError && (
-                  <div className="absolute -top-14 left-1/2 -translate-x-1/2 opacity-0 group-hover/partner:opacity-100 transition-all duration-300 pointer-events-none z-50 transform group-hover/partner:-translate-y-2 w-max max-w-[250px]">
-                    <div 
-                      className="bg-black/90 backdrop-blur text-white px-4 py-2 rounded-xl text-sm font-bold border border-white/10 text-center break-words"
-                      style={{ boxShadow: `0 0 15px ${partner.color || 'var(--color-brand-blue-val)'}` }}
-                    >
-                      {partner.name}
-                    </div>
+                <div className="absolute -top-14 left-1/2 -translate-x-1/2 opacity-0 group-hover/partner:opacity-100 transition-all duration-300 pointer-events-none z-50 transform group-hover/partner:-translate-y-2 w-max max-w-[250px]">
+                  <div 
+                    className="bg-black/90 backdrop-blur text-white px-4 py-2 rounded-xl text-sm font-bold border border-white/10 text-center break-words"
+                    style={{ boxShadow: `0 0 15px ${partner.color || 'var(--color-brand-blue-val)'}` }}
+                  >
+                    {partner.name}
                   </div>
-                )}
+                </div>
 
                 {/* Logo Container */}
                 <div
