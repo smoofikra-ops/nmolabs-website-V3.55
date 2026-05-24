@@ -205,7 +205,7 @@ export const Hero = () => {
             playsInline 
             preload="none"
             className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-            src={isInView && shouldLoadVideo && !isMobile ? config.heroThumbVideoUrl : undefined} 
+            src={isInView && !isMobile ? config.heroThumbVideoUrl : undefined} 
           />
           <div className="absolute inset-0 bg-black/20 group-hover:bg-black/0 transition-colors" />
         </motion.div>
