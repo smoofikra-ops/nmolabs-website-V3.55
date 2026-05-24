@@ -189,6 +189,16 @@ const defaultConfig: SiteConfig = {
         { name: 'إصلاح خرائط جوجل', locked: true, iconName: 'MapPin', iconColor: 'text-gray-400' },
         { name: 'إصلاح فهرسة Search Console', locked: true, iconName: 'Search', iconColor: 'text-gray-400' },
       ]
+    },
+    {
+      id: 'social-media',
+      title: 'وسائل التواصل الاجتماعي',
+      tools: [
+        { name: 'تحليل أداء السوشيال ميديا', locked: false, iconName: 'Activity', iconColor: 'text-brand-green' },
+        { name: 'مخطط منشورات السوشيال', locked: true, iconName: 'Calendar', iconColor: 'text-gray-400' },
+        { name: 'مساعد كتابة بوستات وتغريدات', locked: true, iconName: 'PenTool', iconColor: 'text-gray-400' },
+        { name: 'فاحص التفاعل والهاشتاقات', locked: true, iconName: 'Hash', iconColor: 'text-gray-400' },
+      ]
     }
   ],
   partners: [

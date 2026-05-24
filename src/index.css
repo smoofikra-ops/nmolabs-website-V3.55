@@ -509,7 +509,7 @@ div#root:nth-of-type(1) > div:nth-of-type(1) > header:nth-of-type(1) > div:nth-o
   }
 
   /* 4. Global Card Grid Collapse and Spacing Overrides */
-  .grid:not(.grid-cols-7) {
+  .grid:not(.grid-cols-7):not(.grid-cols-3):not(.grid-cols-2):not(.keep-grid) {
     grid-template-columns: 1fr !important;
     gap: 16px !important;
   }
@@ -568,12 +568,12 @@ div#root:nth-of-type(1) > div:nth-of-type(1) > header:nth-of-type(1) > div:nth-o
     object-fit: cover !important;
     object-position: center center !important;
   }
-  /* Overlay rgba(0,0,0,0.55) */
+  /* Overlay rgba(0,0,0,0.50) */
   section#hero::after {
     content: '';
     position: absolute;
     inset: 0;
-    background: rgba(0, 0, 0, 0.55) !important;
+    background: rgba(0, 0, 0, 0.50) !important;
     z-index: 2;
     pointer-events: none;
   }
@@ -620,6 +620,27 @@ div#root:nth-of-type(1) > div:nth-of-type(1) > header:nth-of-type(1) > div:nth-o
   .hover\:scale-105:hover,
   .group-hover\/partner\:scale-110 {
     transform: none !important;
+  }
+
+  /* Mobile General Section Borders & Custom Glows with Integrated Sci-Fi Background Dots and Radials */
+  #services, #solutions, #whyUs, #tools, #workflow, #testimonials, #faq, #blog, footer {
+    border: 1px solid rgba(43, 194, 194, 0.18) !important;
+    background-color: #070c16 !important;
+    background-image: 
+      radial-gradient(rgba(43, 194, 194, 0.04) 1px, transparent 1px),
+      radial-gradient(circle at 50% 50%, rgba(79, 142, 247, 0.06) 0%, transparent 80%) !important;
+    background-size: 20px 20px, 100% 100% !important;
+    box-shadow: 0 0 15px rgba(43, 194, 194, 0.05), inset 0 0 10px rgba(0, 0, 0, 0.6) !important;
+    margin: 20px 12px !important;
+    border-radius: 24px !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  }
+  #services:active, #solutions:active, #whyUs:active, #tools:active, #workflow:active, #testimonials:active, #faq:active, #blog:active, footer:active {
+    border-color: rgba(43, 194, 194, 0.45) !important;
+    background-image: 
+      radial-gradient(rgba(43, 194, 194, 0.06) 1.5px, transparent 1.5px),
+      radial-gradient(circle at 50% 50%, rgba(79, 142, 247, 0.10) 0%, transparent 75%) !important;
+    box-shadow: 0 0 25px rgba(43, 194, 194, 0.22), inset 0 0 15px rgba(0, 0, 0, 0.8) !important;
   }
 }
 
@@ -671,5 +692,25 @@ div#root:nth-of-type(1) > div:nth-of-type(1) > header:nth-of-type(1) > div:nth-o
     transition: transform 0.1s ease !important;
   }
 }
+
+/* Custom Heartbeat Pulse and Typewriter Animations */
+@keyframes heartbeat {
+  0%, 100% { transform: scale(1); filter: drop-shadow(0 0 15px rgba(43, 194, 194, 0.5)); }
+  50% { transform: scale(1.04); filter: drop-shadow(0 0 25px rgba(43, 194, 194, 0.85)); }
+}
+
+.animate-heartbeat {
+  animation: heartbeat 3s ease-in-out infinite;
+}
+
+@keyframes typewriter-blink {
+  50% { border-color: transparent; }
+}
+
+.animate-typewriter {
+  border-left: 2px solid var(--color-brand-blue-val, #2bc2c2);
+  animation: typewriter-blink 0.8s step-end infinite;
+}
+
 
 

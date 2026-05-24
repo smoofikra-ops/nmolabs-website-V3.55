@@ -17,11 +17,13 @@ const getSocialSvg = (icon: string) => {
 
 const getSocialColorClass = (name: string) => {
   const n = name.toLowerCase();
-  if (n.includes('instagram')) return 'hover:bg-[#E1306C] hover:border-transparent text-white hover:shadow-[0_0_15px_rgba(225,48,108,0.5)]';
-  if (n.includes('twitter') || n.includes('x')) return 'hover:bg-[#1DA1F2] hover:border-transparent text-white hover:shadow-[0_0_15px_rgba(29,161,242,0.5)]';
-  if (n.includes('tiktok')) return 'hover:bg-[#000000] hover:border-white/20 text-white hover:shadow-[0_0_15px_rgba(255,255,255,0.3)]';
-  if (n.includes('linkedin')) return 'hover:bg-[#0077B5] hover:border-transparent text-white hover:shadow-[0_0_15px_rgba(0,119,181,0.5)]';
-  if (n.includes('facebook')) return 'hover:bg-[#1877F2] hover:border-transparent text-white hover:shadow-[0_0_15px_rgba(24,119,242,0.5)]';
+  if (n.includes('instagram')) return 'hover:bg-[#E1306C] hover:border-transparent text-white hover:shadow-[0_0_15px_rgba(225,48,108,0.5)] active:bg-[#E1306C] active:shadow-[0_0_15px_rgba(225,48,108,0.7)]';
+  if (n.includes('twitter') || n.includes('x')) return 'hover:bg-[#000000] hover:border-white/20 text-white hover:shadow-[0_0_15px_rgba(255,255,255,0.2)] active:bg-[#000000]';
+  if (n.includes('tiktok')) return 'hover:bg-[#000000] hover:border-white/20 text-white hover:shadow-[0_0_15px_rgba(255,255,255,0.3)] active:bg-[#000000]';
+  if (n.includes('snapchat') || n.includes('ghost')) return 'hover:bg-[#FFFC00] hover:border-transparent text-black hover:shadow-[0_0_15px_rgba(255,252,0,0.5)] active:bg-[#FFFC00] active:text-black';
+  if (n.includes('whatsapp') || n.includes('message')) return 'hover:bg-[#25D366] hover:border-transparent text-white hover:shadow-[0_0_15px_rgba(37,211,102,0.5)] active:bg-[#25D366]';
+  if (n.includes('linkedin')) return 'hover:bg-[#0077B5] hover:border-transparent text-white hover:shadow-[0_0_15px_rgba(0,119,181,0.5)] active:bg-[#0077B5]';
+  if (n.includes('facebook')) return 'hover:bg-[#1877F2] hover:border-transparent text-white hover:shadow-[0_0_15px_rgba(24,119,242,0.5)] active:bg-[#1877F2]';
   return 'hover:bg-[color:var(--color-brand-blue-val)] hover:border-transparent text-white';
 };
 
@@ -58,12 +60,12 @@ export const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-12 mb-16">
           
           {/* Logo and About Us */}
-          <div className="space-y-6">
+          <div className="space-y-6 flex flex-col max-md:items-center">
             <div className="flex items-center gap-2 cursor-pointer" onClick={() => handleScroll('hero')}>
               <img 
                 src={siteLogo} 
                 alt="NMOLABS Logo" 
-                className="h-16 md:h-20 object-contain drop-shadow-[0_0_25px_rgba(43,194,194,0.75)] shadow-[0_0_30px_rgba(43,194,194,0.3)]"
+                className="h-20 md:h-24 object-contain animate-heartbeat drop-shadow-[0_0_25px_rgba(43,194,194,0.75)] shadow-[0_0_30px_rgba(43,194,194,0.3)]"
                 onError={(e) => {
                   e.currentTarget.style.display = 'none';
                   e.currentTarget.nextElementSibling?.classList.remove('hidden');
@@ -73,18 +75,23 @@ export const Footer = () => {
                 NMOLABS<span className="text-[color:var(--color-brand-blue-val)]">.</span>
               </div>
             </div>
-            <p className="text-gray-400 text-sm leading-relaxed">
+            <p className="text-gray-400 text-sm leading-relaxed max-md:text-center">
               {config.footerDescription}
             </p>
-            <div className="flex gap-4 flex-wrap">
-              {config.socialLinks?.map((link, idx) => (
+            <div className="flex gap-4 flex-wrap max-md:justify-center">
+              {[
+                ...(config.socialLinks || []),
+                { name: 'WhatsApp', url: `https://wa.me/${config.contactNumber.replace(/[^0-9]/g, '')}`, icon: 'MessageCircle' }
+              ]
+              .filter((v, i, a) => a.findIndex(t => t.name === v.name) === i && v.url)
+              .map((link, idx) => (
                 <a 
                   key={idx} 
                   href={link.url} 
                   target="_blank" 
                   rel="noreferrer" 
                   title={link.name} 
-                  className={`w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-gray-400 active:scale-90 transition-all duration-300 ${getSocialColorClass(link.name)}`}
+                  className={`w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-gray-400 active:scale-90 hover:scale-110 transition-all duration-300 ${getSocialColorClass(link.name)}`}
                 >
                   {getSocialSvg(link.icon)}
                 </a>
@@ -93,9 +100,9 @@ export const Footer = () => {
           </div>
 
           {/* Quick Links */}
-          <div className="max-md:bg-[#080812]/50 max-md:border max-md:border-white/10 max-md:rounded-2xl max-md:p-6 max-md:shadow-md max-md:shadow-black">
-            <h4 className="text-white font-bold mb-6 text-lg">روابط سريعة</h4>
-            <ul className="space-y-3.5 md:space-y-4 text-sm text-gray-400">
+          <div className="max-md:bg-[#0c1220] max-md:border max-md:border-white/15 max-md:rounded-2xl max-md:p-6 max-md:shadow-[0_0_15px_rgba(43,194,194,0.06)]">
+            <h4 className="text-white font-bold mb-6 text-lg max-md:text-center">روابط سريعة</h4>
+            <ul className="space-y-3 text-sm text-gray-400 w-full">
               {[
                 { label: 'الرئيسية', target: 'hero' },
                 { label: 'خدماتنا', target: 'services' },
@@ -104,12 +111,13 @@ export const Footer = () => {
                 { label: 'المدونة', target: 'blog' },
                 { label: 'الأسئلة الشائعة', target: 'faq' }
               ].map((item, idx) => (
-                <li key={idx}>
+                <li key={idx} className="w-full">
                   <button 
                     onClick={() => handleScroll(item.target)} 
-                    className="w-full text-right px-4 py-2.5 max-md:bg-white/5 max-md:border max-md:border-white/5 max-md:rounded-xl hover:text-[color:var(--color-brand-blue-val)] max-md:hover:bg-white/10 transition-all text-sm block cursor-pointer border-none"
+                    className="w-full text-right px-4 py-2.5 max-md:bg-white/5 max-md:border max-md:border-white/10 max-md:rounded-xl hover:text-[color:var(--color-brand-blue-val)] max-md:hover:bg-white/10 active:scale-95 transition-all text-sm block cursor-pointer border-none flex items-center justify-between"
                   >
-                    {item.label}
+                    <span>{item.label}</span>
+                    <span className="md:hidden text-[color:var(--color-brand-blue-val)] font-bold text-xs">&larr;</span>
                   </button>
                 </li>
               ))}
@@ -117,21 +125,22 @@ export const Footer = () => {
           </div>
 
           {/* Policies */}
-          <div className="max-md:bg-[#080812]/50 max-md:border max-md:border-white/10 max-md:rounded-2xl max-md:p-6 max-md:shadow-md max-md:shadow-black">
-            <h4 className="text-white font-bold mb-6 text-lg">السياسات</h4>
-            <ul className="space-y-3.5 md:space-y-4 text-sm text-gray-400">
+          <div className="max-md:bg-[#0c1220] max-md:border max-md:border-white/15 max-md:rounded-2xl max-md:p-6 max-md:shadow-[0_0_15px_rgba(43,194,194,0.06)]">
+            <h4 className="text-white font-bold mb-6 text-lg max-md:text-center">السياسات</h4>
+            <ul className="space-y-3 text-sm text-gray-400 w-full">
               {[
                 { label: 'سياسة الخصوصية', route: 'privacy' },
                 { label: 'شروط الاستخدام', route: 'terms' },
                 { label: 'سياسة ملفات الارتباط', route: 'cookies' },
                 { label: 'إخلاء المسؤولية', route: 'disclaimer' }
               ].map((item, idx) => (
-                <li key={idx}>
+                <li key={idx} className="w-full">
                   <button 
                     onClick={() => { updateConfig({ currentRoute: item.route }); window.scrollTo(0, 0); }} 
-                    className="w-full text-right px-4 py-2.5 max-md:bg-white/5 max-md:border max-md:border-white/5 max-md:rounded-xl hover:text-[color:var(--color-brand-blue-val)] max-md:hover:bg-white/10 transition-all text-sm block cursor-pointer border-none"
+                    className="w-full text-right px-4 py-2.5 max-md:bg-white/5 max-md:border max-md:border-white/10 max-md:rounded-xl hover:text-[color:var(--color-brand-blue-val)] max-md:hover:bg-white/10 active:scale-95 transition-all text-sm block cursor-pointer border-none flex items-center justify-between"
                   >
-                    {item.label}
+                    <span>{item.label}</span>
+                    <span className="md:hidden text-[color:var(--color-brand-blue-val)] font-bold text-xs">&larr;</span>
                   </button>
                 </li>
               ))}
@@ -139,20 +148,20 @@ export const Footer = () => {
           </div>
 
           {/* Contact Info */}
-          <div className="max-md:bg-[#080812]/50 max-md:border max-md:border-white/10 max-md:rounded-2xl max-md:p-6 max-md:shadow-md max-md:shadow-black">
-            <h4 className="text-white font-bold mb-6 text-lg">التواصل</h4>
-            <ul className="space-y-3.5 md:space-y-4 text-sm text-gray-400">
-              <li className="flex items-start gap-3 px-4 py-2.5 max-md:bg-white/5 max-md:border max-md:border-white/5 max-md:rounded-xl">
+          <div className="max-md:bg-[#0c1220] max-md:border max-md:border-white/15 max-md:rounded-2xl max-md:p-6 max-md:shadow-[0_0_15px_rgba(43,194,194,0.06)]">
+            <h4 className="text-white font-bold mb-6 text-lg max-md:text-center">التواصل</h4>
+            <ul className="space-y-3 text-sm text-gray-400 w-full">
+              <li className="flex items-start gap-3 px-4 py-2.5 max-md:bg-white/5 max-md:border max-md:border-white/10 max-md:rounded-xl">
                 <MapPin size={18} className="text-[color:var(--color-brand-blue-val)] shrink-0 mt-0.5" />
-                <span dir="ltr" className="text-right w-full">المملكة العربية السعودية، الرياض</span>
+                <span dir="ltr" className="text-right w-full text-white">المملكة العربية السعودية، الرياض</span>
               </li>
-              <li className="flex items-center gap-3 px-4 py-2.5 max-md:bg-white/5 max-md:border max-md:border-white/5 max-md:rounded-xl">
+              <li className="flex items-center gap-3 px-4 py-2.5 max-md:bg-white/5 max-md:border max-md:border-white/10 max-md:rounded-xl">
                 <Phone size={18} className="text-[color:var(--color-brand-blue-val)] shrink-0" />
-                <span dir="ltr" className="font-english">{config.contactNumber}</span>
+                <span dir="ltr" className="font-english text-white">{config.contactNumber}</span>
               </li>
-              <li className="flex items-center gap-3 px-4 py-2.5 max-md:bg-white/5 max-md:border max-md:border-white/5 max-md:rounded-xl">
+              <li className="flex items-center gap-3 px-4 py-2.5 max-md:bg-white/5 max-md:border max-md:border-white/10 max-md:rounded-xl">
                 <Mail size={18} className="text-[color:var(--color-brand-blue-val)] shrink-0" />
-                <span dir="ltr" className="font-english">hello@nmolabs.com</span>
+                <span dir="ltr" className="font-english text-white">hello@nmolabs.com</span>
               </li>
             </ul>
           </div>
@@ -160,11 +169,11 @@ export const Footer = () => {
         </div>
 
         {/* Copyright */}
-        <div className="pt-8 border-t border-white/10 flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-gray-500">
+        <div className="pt-8 border-t border-white/10 flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-gray-500 max-md:text-center">
           <p>© {currentYear} نمو لابز. جميع الحقوق محفوظة.</p>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 max-md:bg-white/5 max-md:border max-md:border-white/10 max-md:px-4 max-md:py-2 max-md:rounded-full">
             <span>صُنع بشغف في</span>
-            <span className="text-white font-black text-xs font-english tracking-widest">NMOLABS</span>
+            <span className="text-white font-black text-xs font-english tracking-widest animate-typewriter pr-1 pl-1">NMOLABS</span>
           </div>
         </div>
       </div>

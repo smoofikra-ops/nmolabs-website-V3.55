@@ -91,7 +91,11 @@ export const FAQ = () => {
                 return (
                   <div 
                     key={i}
-                    className={`transition-all duration-300 rounded-2xl overflow-hidden hover:-translate-y-1 ${isOpen ? 'bg-[#080814]/90 border border-[#2bc2c2]/60 shadow-[0_0_20px_rgba(43,194,194,0.15)]' : 'bg-black/40 border border-white/10 shadow-[inset_0_4px_12px_rgba(0,0,0,0.8),0_1px_1px_rgba(255,255,255,0.05)] hover:bg-black/60 hover:border-white/20'}`}
+                    className={`transition-all duration-300 rounded-2xl overflow-hidden hover:-translate-y-1 active:scale-[0.98] 
+                      ${isOpen 
+                        ? 'bg-[#080814]/90 border border-[#2bc2c2]/60 shadow-[0_0_20px_rgba(43,194,194,0.15)] max-md:bg-[#0c1220] max-md:border-[#2bc2c2]/80 max-md:shadow-[0_0_20px_rgba(43,194,194,0.2)]' 
+                        : 'bg-black/40 border border-white/10 shadow-[inset_0_4px_12px_rgba(0,0,0,0.8),0_1px_1px_rgba(255,255,255,0.05)] hover:bg-black/60 hover:border-white/20 max-md:bg-[#0c1220] max-md:border-white/20 max-md:shadow-[0_0_12px_rgba(43,194,194,0.08)]'
+                      }`}
                   >
                     <button 
                       className="w-full text-right p-6 text-lg md:text-xl font-bold flex items-center justify-between text-[color:var(--color-text-main)]"

@@ -59,7 +59,6 @@ export const Hero = () => {
   const [scanProgress, setScanProgress] = useState(0);
   const [showModal, setShowModal] = useState(false);
   const [analysisResults, setAnalysisResults] = useState<any>(null);
-  const [shouldLoadVideo, setShouldLoadVideo] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const heroRef = useRef<HTMLElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -75,23 +74,18 @@ export const Hero = () => {
   }, []);
 
   useEffect(() => {
-    const t = setTimeout(() => setShouldLoadVideo(true), 2500); 
-    return () => clearTimeout(t);
-  }, []);
-
-  useEffect(() => {
     if (videoRef.current) {
       videoRef.current.playbackRate = config.heroVideoPlaybackRate ?? 1;
     }
   }, [config.heroVideoPlaybackRate]);
 
   useEffect(() => {
-    if (videoRef.current && isInView && shouldLoadVideo) {
+    if (videoRef.current && isInView) {
       videoRef.current.play().catch(err => {
         console.warn("Mobile autoplay video play request was prevented: ", err);
       });
     }
-  }, [isInView, shouldLoadVideo]);
+  }, [isInView]);
 
   if (!config.sections.hero) return null;
 
@@ -176,8 +170,8 @@ export const Hero = () => {
           }}
         />
         
-        {/* Video Background (if provided) */}
-        {heroContent.videoUrl && (
+        {/* Video Background */}
+        {(heroContent.videoUrl || isMobile) && (
           <>
             <video 
               ref={videoRef}
@@ -186,12 +180,12 @@ export const Hero = () => {
               muted 
               playsInline 
               preload="metadata"
-              poster={config.heroVideoPoster || "https://l.top4top.io/p_37931425f1.jpeg" || undefined}
+              poster={config.heroVideoPoster || "https://l.top4top.io/p_37931425f1.jpeg"}
               className="absolute inset-0 w-full h-full object-cover opacity-50 md:opacity-40 transition-opacity duration-1000 pointer-events-none"
-              src={heroContent.videoUrl} 
+              src={isMobile ? "https://b.top4top.io/m_37896jjzf1.mp4" : (heroContent.videoUrl || "https://b.top4top.io/m_37896jjzf1.mp4")} 
             />
             {/* Mobile Video Overlay for readability */}
-            <div className="absolute inset-0 bg-black/60 z-[1] md:hidden pointer-events-none" />
+            <div className="absolute inset-0 bg-black/50 z-[1] md:hidden pointer-events-none" />
           </>
         )}
       </ParallaxBackground>
@@ -344,14 +338,14 @@ export const Hero = () => {
             </div>
 
             {/* Mobile Version (Independent Input & Centered Gradient Button Underneath) */}
-            <div className="flex md:hidden flex-col gap-3.5 w-full max-w-sm mx-auto px-4">
-              <div className="relative rounded-xl bg-black/50 border border-white/10 shadow-[inset_0_2px_6px_rgba(0,0,0,0.7)]">
+            <div className="flex md:hidden flex-col gap-3 w-full max-w-[280px] mx-auto px-1">
+              <div className="relative rounded-xl bg-black/60 border border-white/15 shadow-[inset_0_2px_6px_rgba(0,0,0,0.8)]">
                 <input 
                   type="url" 
                   value={url}
                   onChange={(e) => setUrl(e.target.value)}
                   placeholder="https://yourstore.com"
-                  className="w-full bg-transparent border-none outline-none text-white px-4 py-2.5 rounded-xl font-english text-sm placeholder-[color:var(--color-text-muted)] text-center focus:ring-0 focus:ring-offset-0 focus:border-transparent"
+                  className="w-full bg-transparent border-none outline-none text-white px-4 py-2 rounded-xl font-english text-xs placeholder-[color:var(--color-text-muted)] text-center focus:ring-0 focus:ring-offset-0 focus:border-transparent"
                   dir="ltr"
                   disabled={isScanning}
                   onKeyDown={(e) => {
@@ -362,7 +356,7 @@ export const Hero = () => {
               <button
                 onClick={handleScan}
                 disabled={isScanning || !url}
-                className="w-full py-3 rounded-xl font-bold text-sm text-white transition-all duration-300 flex items-center justify-center gap-2 relative overflow-hidden shadow-lg border border-white/10 active:scale-95 active:brightness-110"
+                className="w-full py-2.5 rounded-xl font-bold text-xs text-white transition-all duration-300 flex items-center justify-center gap-2 relative overflow-hidden shadow-lg border border-white/10 active:scale-95 active:brightness-110"
                 style={{ 
                   background: `linear-gradient(135deg, ${config.primaryColor} 0%, ${config.accentColor} 100%)`,
                   boxShadow: `0 0 15px ${config.primaryColor}50`
@@ -371,12 +365,12 @@ export const Hero = () => {
                 {isScanning ? (
                   <span className="flex items-center gap-2 font-english">
                     جاري الفحص {scanProgress}% 
-                    <ScanLine size={18} className="animate-pulse" />
+                    <ScanLine size={16} className="animate-pulse" />
                   </span>
                 ) : (
                   <>
                     {heroContent.ctaText}
-                    <ArrowLeft size={18} className="rotate-180 shrink-0" />
+                    <ArrowLeft size={16} className="rotate-180 shrink-0" />
                   </>
                 )}
               </button>

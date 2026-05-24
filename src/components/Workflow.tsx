@@ -48,10 +48,10 @@ export const Workflow = () => {
                   whileInView={{ opacity: 1, y: 0, scale: 1 }}
                   viewport={{ once: true, margin: "-100px" }}
                   transition={{ delay: i * 0.15 }}
-                  className="w-full bg-black/40 shadow-[inset_0_4px_12px_rgba(0,0,0,0.8),0_1px_1px_rgba(255,255,255,0.05)] border border-black/80 py-6 px-8 rounded-2xl text-center font-bold text-lg relative group overflow-hidden"
+                  className="w-full bg-black/40 shadow-[inset_0_4px_12px_rgba(0,0,0,0.8),0_1px_1px_rgba(255,255,255,0.05)] border border-white/10 py-6 px-8 rounded-2xl text-center font-bold text-lg relative group overflow-hidden max-md:bg-[#0c1220] max-md:border-white/20 max-md:shadow-[0_0_12px_rgba(43,194,194,0.08)]"
                   style={{ 
                     boxShadow: i === 3 ? `0 0 30px -10px ${config.primaryColor}` : 'none',
-                    borderColor: i === 3 ? config.primaryColor : 'var(--glass-border)'
+                    borderColor: i === 3 ? config.primaryColor : undefined
                   }}
                 >
                   <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[color:var(--color-text-main)] to-transparent opacity-0 group-hover:opacity-10 transition-opacity translate-x-[-100%] group-hover:translate-x-[100%] duration-1000" />

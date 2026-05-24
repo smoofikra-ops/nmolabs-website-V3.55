@@ -87,16 +87,20 @@ export const Blog = () => {
           <div className="w-16 h-1 bg-[color:var(--color-brand-blue-val)] mx-auto rounded-full" />
         </div>
 
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="flex overflow-x-auto snap-x snap-mandatory scrollbar-hide gap-4 pb-4 w-full px-2">
-            {blogPosts.map((post) => (
+        <div className="relative w-full overflow-hidden ltr" dir="ltr">
+          {/* Fading Edge Masks */}
+          <div className="absolute top-0 bottom-0 left-0 w-12 bg-gradient-to-r from-[#04080f] to-transparent z-10 pointer-events-none"></div>
+          <div className="absolute top-0 bottom-0 right-0 w-12 bg-gradient-to-l from-[#04080f] to-transparent z-10 pointer-events-none"></div>
+
+          <div className="flex gap-4 w-max pr-4 animate-[marquee-rtl_45s_linear_infinite] hover:[animation-play-state:paused]">
+            {[...blogPosts, ...blogPosts, ...blogPosts].map((post, idx) => (
               <div 
-                key={post.id} 
-                className="snap-center shrink-0 w-[55vw] min-w-[200px] bg-black/40 border border-white/10 rounded-2xl overflow-hidden hover:border-[color:var(--color-brand-blue-val)] transition-all duration-300 flex flex-col text-right shadow-[inset_0_2px_4px_rgba(0,0,0,0.5)]"
+                key={`${post.id}-${idx}`} 
+                className="w-[160px] bg-[#0c1220] border border-white/20 rounded-2xl overflow-hidden hover:border-[color:var(--color-brand-blue-val)] transition-all duration-300 flex-shrink-0 flex flex-col text-right shadow-[0_0_12px_rgba(43,194,194,0.08)]"
                 dir="rtl"
               >
-                <div className="h-32 overflow-hidden relative border-b border-white/5">
-                  <div className="absolute top-2.5 right-2.5 z-10 bg-black/60 backdrop-blur-md px-2.5 py-1 rounded-full text-[9px] font-bold text-[color:var(--color-brand-blue-val)] border border-[color:var(--color-brand-blue-val)]/30 drop-shadow-md">
+                <div className="h-28 overflow-hidden relative border-b border-white/5">
+                  <div className="absolute top-2.5 right-2.5 z-10 bg-black/60 backdrop-blur-md px-2 py-0.5 rounded-full text-[8px] font-bold text-[color:var(--color-brand-blue-val)] border border-[color:var(--color-brand-blue-val)]/30 drop-shadow-md">
                     {post.category}
                   </div>
                   <img 
@@ -108,15 +112,15 @@ export const Blog = () => {
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent pointer-events-none"></div>
                 </div>
-                <div className="p-4 flex-1 flex flex-col justify-between relative mt-[-10px] z-20 bg-gradient-to-b from-transparent to-black/40">
+                <div className="p-3 flex-1 flex flex-col justify-between relative mt-[-10px] z-20 bg-gradient-to-b from-transparent to-black/40">
                   <div>
-                    <div className="text-[9px] text-[color:var(--color-text-muted)] mb-2 flex items-center gap-1.5">
+                    <div className="text-[9px] text-[color:var(--color-text-muted)] mb-1 flex items-center gap-1">
                        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
                        {post.date}
                     </div>
-                    <h3 className="text-xs font-bold text-white mb-3 line-clamp-2 leading-snug">{post.title}</h3>
+                    <h3 className="text-[11px] font-bold text-white mb-2 line-clamp-2 leading-tight min-h-[30px]">{post.title}</h3>
                   </div>
-                  <button className="text-[10px] text-[color:var(--color-brand-blue-val)] font-bold flex items-center justify-between transition-all duration-300 w-full mt-2 hover:brightness-110 active:scale-95 bg-white/5 border border-white/10 px-3 py-1.5 rounded-lg border-none cursor-pointer">
+                  <button className="text-[9px] text-[color:var(--color-brand-blue-val)] font-bold flex items-center justify-between w-full mt-1 bg-white/5 px-2 py-1.5 rounded-lg border-none cursor-pointer">
                     <span>اقرأ المقال</span>
                     <span className="text-xs">&larr;</span>
                   </button>

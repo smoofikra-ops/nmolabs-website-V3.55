@@ -196,14 +196,15 @@ export const Services = () => {
             onClick={() => setOpenId(null)}
           >
             <motion.div 
-               initial={{ opacity: 0, scale: 0.95, y: 20 }}
+               initial={{ opacity: 0, scale: 0.90, y: 30 }}
                animate={{ opacity: 1, scale: 1, y: 0 }}
-               exit={{ opacity: 0, scale: 0.95, y: 20 }}
+               exit={{ opacity: 0, scale: 0.90, y: 30 }}
+               transition={{ type: "spring", duration: 0.5 }}
                onClick={(e) => e.stopPropagation()}
-               className={`bg-[#080812] border-2 border-white/15 rounded-[24px] w-full ${isStoreService ? 'max-w-6xl' : 'max-w-2xl'} overflow-hidden shadow-[0_0_50px_rgba(79,142,247,0.25)] relative flex flex-col max-h-[90vh]`}
+               className={`bg-[#090d16] border-2 border-[#2bc2c2]/30 md:border-white/15 rounded-[24px] w-full ${isStoreService ? 'max-w-6xl' : 'max-w-2xl'} overflow-hidden shadow-[0_0_50px_rgba(43,194,194,0.25)] relative flex flex-col max-h-[90vh]`}
             >
                {/* Modal Header */}
-               <div className="p-6 pb-6 border-b border-white/10 flex justify-between items-start sticky top-0 bg-[#080812] z-10">
+               <div className="p-6 pb-6 border-b border-white/10 flex justify-between items-start sticky top-0 bg-[#090d16] z-10">
                  <div className="flex flex-col gap-2">
                    <div 
                      className="p-3 w-max rounded-xl text-[color:var(--color-brand-blue-val)] bg-[color:var(--color-brand-blue-val)]/10 mb-2 border border-white/5"
@@ -214,10 +215,10 @@ export const Services = () => {
                  </div>
                  <button 
                    onClick={() => setOpenId(null)}
-                   className="p-3 text-white bg-white/5 hover:bg-white/20 border border-white/10 rounded-full transition-all cursor-pointer shadow-lg flex items-center justify-center"
+                   className="w-12 h-12 flex items-center justify-center bg-black/60 border border-white/20 text-white rounded-full hover:bg-white/10 active:scale-90 transition-all cursor-pointer shadow-lg shrink-0"
                    aria-label="إغلاق"
                  >
-                   <X size={20} />
+                   <X size={22} />
                  </button>
                </div>
 
@@ -252,16 +253,17 @@ export const Services = () => {
                          مراحل وخطوات إنشاء متجرك الإلكتروني:
                        </h4>
                        <ul className="flex flex-col gap-3 mb-8">
-                         {[
-                           'اختيار وحجز النطاق والاسم التجاري (Domain)',
-                           'تصميم الشعار والهوية البصرية للمتجر الإلكتروني',
-                           'إنشاء وتفعيل الحساب على المنصة (سلة / زد)',
-                           'تصميم وتخصيص واجهة المتجر بشكل احترافي',
-                           'رفع المنتجات وتنسيق الصور وكتابة الأوصاف',
-                           'ربط بوابات الدفع الإلكتروني (مدى، فيزا، أبل باي)',
-                           'ربط شركات الشحن والتوصيل المحلية والدولية',
-                           'تسليم المتجر جاهزاً للبيع بالكامل مع الدعم الفني'
-                         ].map((item, i) => (
+                          {[
+                            'اختيار الاسم والهوية',
+                            'تصميم الشعار',
+                            'إنشاء وتهيئة المتجر',
+                            'تخصيص الستايل',
+                            'ربط الدفع والشحن',
+                            'ربط تابي وتمارا',
+                            'ربط الدومين',
+                            'إنشاء الصفحات والسياسات',
+                            'تجهيز المتجر للإطلاق والتسويق'
+                          ].map((item, i) => (
                            <li key={i} className="flex items-center gap-3 text-white bg-black/40 border border-white/10 p-3.5 rounded-xl text-right">
                              <span className="flex items-center justify-center w-6 h-6 rounded-full bg-[color:var(--color-brand-blue-val)]/25 text-[color:var(--color-brand-blue-val)] text-xs font-bold shrink-0">{i + 1}</span>
                              <span className="text-sm font-medium leading-relaxed">{item}</span>

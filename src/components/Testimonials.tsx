@@ -14,7 +14,7 @@ const PartnerLogo = ({ partner }: { partner: any }) => {
         loading="lazy" 
         decoding="async"
         onError={() => setImageError(true)}
-        className="w-full h-full object-contain transition-transform duration-300 pointer-events-none drop-shadow-md" 
+        className="w-full h-full object-contain transition-transform duration-300 pointer-events-none drop-shadow-[0_6px_14px_rgba(0,0,0,0.55)]" 
       />
     );
   }
@@ -105,15 +105,10 @@ export const Testimonials = () => {
                   {/* Background glow to make black logos prominent */}
                   <div className="absolute inset-0 bg-white/20 blur-xl rounded-full scale-110 pointer-events-none opacity-50"></div>
                   
-                  <div className="relative z-10 w-full h-full p-2.5 md:p-4 flex items-center justify-center">
+                  <div className="relative z-10 w-full h-full p-1 md:p-4 flex items-center justify-center">
                     <PartnerLogo partner={partner} />
                   </div>
                 </div>
-
-                {/* Mobile Partner Name */}
-                <span className="md:hidden mt-2 text-[10px] font-bold text-white text-center break-words max-w-[80px] line-clamp-1">
-                  {partner.name}
-                </span>
               </div>
             ))}
           </div>
@@ -150,15 +145,10 @@ export const Testimonials = () => {
                   {/* Background glow to make black logos prominent */}
                   <div className="absolute inset-0 bg-white/20 blur-xl rounded-full scale-110 pointer-events-none opacity-50"></div>
                   
-                  <div className="relative z-10 w-full h-full p-2.5 md:p-4 flex items-center justify-center">
+                  <div className="relative z-10 w-full h-full p-1 md:p-4 flex items-center justify-center">
                     <PartnerLogo partner={partner} />
                   </div>
                 </div>
-
-                {/* Mobile Partner Name */}
-                <span className="md:hidden mt-2 text-[10px] font-bold text-white text-center break-words max-w-[80px] line-clamp-1">
-                  {partner.name}
-                </span>
               </div>
             ))}
           </div>

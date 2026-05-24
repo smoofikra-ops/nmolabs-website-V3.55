@@ -217,7 +217,7 @@ export const Solutions = () => {
                     }}
                   />
                   <div className="flex flex-col">
-                    <span className="text-[9px] font-bold text-white px-2 py-0.5 rounded-full bg-[color:var(--color-brand-blue-val)]/25 border border-[color:var(--color-brand-blue-val)]/30 w-max mb-1 animate-pulse">كن أول من يحصل على الخدمة</span>
+                    <span className="text-[9px] font-bold text-white px-2 py-0.5 rounded-full bg-[color:var(--color-brand-blue-val)]/25 border border-[color:var(--color-brand-blue-val)]/30 w-max mb-1 animate-pulse">كن أول من يحصل على هذه الخدمة</span>
                     <h3 className="text-lg font-bold text-white">البائع الذكي للفروع</h3>
                   </div>
                 </div>
@@ -256,7 +256,7 @@ export const Solutions = () => {
                     }}
                   />
                   <div className="flex flex-col">
-                    <span className="text-[9px] font-bold text-white px-2 py-0.5 rounded-full bg-[color:var(--color-brand-purple-val)]/25 border border-[color:var(--color-brand-purple-val)]/30 w-max mb-1 animate-pulse">كن أول من يحصل على الخدمة</span>
+                    <span className="text-[9px] font-bold text-white px-2 py-0.5 rounded-full bg-[color:var(--color-brand-purple-val)]/25 border border-[color:var(--color-brand-purple-val)]/30 w-max mb-1 animate-pulse">كن أول من يحصل على هذه الخدمة</span>
                     <h3 className="text-lg font-bold text-white">البائع الذكي للمتاجر</h3>
                   </div>
                 </div>
@@ -501,11 +501,25 @@ export const Solutions = () => {
               <div className="absolute inset-0 bg-[color:var(--color-brand-blue-val)] opacity-15 blur-[60px] rounded-full animate-pulse pointer-events-none" />
               <div className="grid grid-cols-2 gap-4 relative z-10 w-full max-w-[340px]">
                 <div className="bg-[#0c1619] border-2 border-[#2bc2c2]/50 max-md:border-[#2bc2c2]/80 hover:border-[#2bc2c2]/80 rounded-2xl p-6 flex flex-col items-center justify-center gap-3 hover:bg-[#0c1619]/80 transition-all shadow-[0_0_20px_rgba(43,194,194,0.3)] max-md:shadow-[0_0_30px_rgba(43,194,194,0.6)] transform hover:-translate-y-1 active:scale-95">
-                  <img src={sallaLogo} alt="Salla" className="w-16 h-16 md:w-20 md:h-20 object-contain" />
+                  <img 
+                    src={sallaLogo} 
+                    alt="Salla" 
+                    className="w-20 h-20 md:w-20 md:h-20 object-contain drop-shadow-[0_4px_12px_rgba(43,194,194,0.4)] shrink-0" 
+                    onError={(e) => {
+                      e.currentTarget.src = "https://cdn.salla.sa/cdn-cgi/image/fit=scale-down,width=120,height=120,onerror=redirect,format=auto/BrzyDD/5GmtTmSorZpwTyuxAPydLrhQ20Zl5HMfO5392Rek.png";
+                    }}
+                  />
                   <span className="text-sm font-bold text-white">سلة</span>
                 </div>
                 <div className="bg-[#140b19] border-2 border-[#7C3AED]/50 max-md:border-[#7C3AED]/80 hover:border-[#7C3AED]/80 rounded-2xl p-6 flex flex-col items-center justify-center gap-3 hover:bg-[#140b19]/80 transition-all shadow-[0_0_20px_rgba(124,58,237,0.3)] max-md:shadow-[0_0_30px_rgba(124,58,237,0.6)] transform hover:-translate-y-1 active:scale-95">
-                  <img src={zidLogo} alt="Zid" className="w-16 h-16 md:w-20 md:h-20 object-contain" />
+                  <img 
+                    src={zidLogo} 
+                    alt="Zid" 
+                    className="w-20 h-20 md:w-20 md:h-20 object-contain drop-shadow-[0_4px_12px_rgba(124,58,237,0.4)] shrink-0" 
+                    onError={(e) => {
+                      e.currentTarget.src = "https://media.zid.store/13b20f5f-3857-45e3-9134-458d965caf58/a8827d63-f750-41ea-b5b2-1be59091326a.png";
+                    }}
+                  />
                   <span className="text-sm font-bold text-white">زد</span>
                 </div>
               </div>

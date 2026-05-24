@@ -109,6 +109,7 @@ export const ToolsGrid = () => {
   const categoriesRef = useRef<HTMLDivElement>(null);
   const [isMobile, setIsMobile] = useState(false);
   const [expandedPackageIdx, setExpandedPackageIdx] = useState<number | null>(1); // default to popular package (1)
+  const [alertMessage, setAlertMessage] = useState<string | null>(null);
 
   useEffect(() => {
     const checkMobile = () => {
@@ -204,21 +205,23 @@ export const ToolsGrid = () => {
             onTouchEnd={() => setTimeout(() => setIsPaused(false), 1500)}
             onMouseEnter={() => setIsPaused(true)}
             onMouseLeave={() => setIsPaused(false)}
-            className="w-full md:w-1/3 lg:w-1/4 flex flex-col max-md:flex-row max-md:overflow-x-auto scrollbar-hide gap-3 shrink-0 max-md:pb-4 max-md:px-1"
+            className="w-full md:w-1/3 lg:w-1/4 grid grid-cols-3 max-md:gap-2 md:flex md:flex-col gap-3 shrink-0 keep-grid"
           >
             {config.toolCategories?.map((category, idx) => (
               <button
                 key={category.id || idx}
                 onClick={() => setOpenIndex(idx)}
-                className={`text-right px-6 py-5 rounded-2xl flex items-center justify-between transition-all duration-300 border shrink-0 max-md:whitespace-nowrap max-md:w-auto max-md:px-4 max-md:py-3 max-md:text-sm max-md:gap-3 ${
-                  openIndex === idx 
-                    ? 'bg-[color:var(--color-brand-blue-val)]/15 border-[color:var(--color-brand-blue-val)]/50 text-[color:var(--color-brand-green-val)] shadow-[inset_0_2px_8px_rgba(79,142,247,0.15)]' 
-                    : 'bg-black/40 border-black shadow-[inset_0_4px_12px_rgba(0,0,0,0.8),0_1px_1px_rgba(255,255,255,0.05)] text-gray-400 hover:bg-black/60 hover:text-white hover:border-white/10'
-                }`}
+                className={`text-right px-6 py-5 rounded-2xl flex items-center justify-between transition-all duration-300 border shrink-0 
+                  max-md:flex-col max-md:items-center max-md:justify-center max-md:text-center max-md:p-2.5 max-md:gap-1.5 max-md:rounded-xl
+                  ${
+                    openIndex === idx 
+                      ? 'bg-[color:var(--color-brand-blue-val)]/15 border-[color:var(--color-brand-blue-val)]/60 text-[color:var(--color-brand-green-val)] shadow-[0_0_15px_rgba(43,194,194,0.15)]' 
+                      : 'bg-black/50 border-white/10 shadow-[inset_0_4px_12px_rgba(0,0,0,0.8)] text-gray-400 hover:bg-black/60 hover:text-white hover:border-white/15'
+                  }`}
               >
-                <span className={`font-bold text-lg max-md:text-sm ${openIndex === idx ? 'text-shadow-sm' : ''}`}>{category.title}</span>
-                <div className={`w-10 h-10 max-md:w-8 max-md:h-8 rounded-xl flex items-center justify-center ${openIndex === idx ? 'bg-[color:var(--color-brand-blue-val)]/20' : 'bg-black/50 shadow-[inset_0_2px_4px_rgba(0,0,0,0.5)] border border-white/5'}`}>
-                  <IconMapper name={category.tools?.[0]?.iconName || 'Wrench'} className={`w-5 h-5 max-md:w-4 max-md:h-4 ${openIndex === idx ? 'text-[color:var(--color-brand-green-val)] drop-shadow-[0_0_5px_rgba(34,211,160,0.5)]' : 'opacity-60'}`} />
+                <span className={`font-bold text-lg max-md:text-[10px] max-md:leading-tight ${openIndex === idx ? 'text-shadow-sm' : ''}`}>{category.title}</span>
+                <div className={`w-10 h-10 max-md:w-7 max-md:h-7 rounded-xl flex items-center justify-center ${openIndex === idx ? 'bg-[color:var(--color-brand-blue-val)]/20' : 'bg-black/50 shadow-[inset_0_2px_4px_rgba(0,0,0,0.5)] border border-white/5 shrink-0'}`}>
+                  <IconMapper name={category.tools?.[0]?.iconName || 'Wrench'} className={`w-5 h-5 max-md:w-3.5 max-md:h-3.5 ${openIndex === idx ? 'text-[color:var(--color-brand-green-val)] drop-shadow-[0_0_5px_rgba(34,211,160,0.5)]' : 'opacity-60'}`} />
                 </div>
               </button>
             ))}
@@ -253,7 +256,7 @@ export const ToolsGrid = () => {
                               setIsModalOpen(true);
                             }}
                             tabIndex={0}
-                            className={`relative p-8 rounded-3xl flex flex-col justify-between transition-all duration-300 group/tooltip group/card min-h-[160px] cursor-pointer focus:outline-none focus:ring-2 focus:ring-[color:var(--color-brand-blue-val)]/50 bg-black/50 border ${theme.border} ${theme.glow}`}
+                            className={`relative p-8 max-md:p-5 rounded-3xl max-md:rounded-2xl flex flex-col justify-between transition-all duration-300 group/tooltip group/card min-h-[160px] max-md:min-h-[125px] cursor-pointer focus:outline-none focus:ring-2 focus:ring-[color:var(--color-brand-blue-val)]/50 bg-black/50 border ${theme.border} ${theme.glow} max-md:bg-[#0c1220] max-md:border-white/20 max-md:shadow-[0_0_12px_rgba(43,194,194,0.08)]`}
                           >
                             {/* Tooltip on Desktop only */}
                             {!isMobile && (
@@ -370,7 +373,13 @@ export const ToolsGrid = () => {
                               ))}
                             </div>
                             <button 
-                              onClick={() => triggerBookingModal(pkg.buttonLabel.includes('تواصل') || pkg.contactLink ? 'استشارة عامة' : `باقة الأسعار - ${pkg.name}`)}
+                              onClick={() => {
+                                if (i === 0) {
+                                  setAlertMessage("يمكنك الآن استخدام الأدوات المجانية. نتمنى لك التوفيق في تجارتك الإلكترونية ومشروعك.");
+                                } else {
+                                  setAlertMessage("هذه الخدمة قيد التطوير حاليًا وسيتم تفعيل الاشتراك قريبًا.");
+                                }
+                              }}
                               className="w-full py-3.5 rounded-xl font-bold text-xs text-white bg-gradient-to-r from-brand-blue to-brand-purple hover:shadow-[0_0_20px_rgba(79,142,247,0.4)] transition-all cursor-pointer text-center border-none"
                             >
                               {pkg.buttonLabel}
@@ -447,6 +456,40 @@ export const ToolsGrid = () => {
           onClose={() => setIsModalOpen(false)}
           tool={selectedTool}
         />
+
+        {/* Custom Premium Alert Dialog for Mobile Package Taps */}
+        <AnimatePresence>
+          {alertMessage && (
+            <div 
+              className="fixed inset-0 z-[300] flex items-center justify-center bg-black/85 backdrop-blur-md p-4 rtl text-right"
+              onClick={() => setAlertMessage(null)}
+            >
+              <motion.div 
+                initial={{ opacity: 0, scale: 0.9, y: 20 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.9, y: 20 }}
+                onClick={(e) => e.stopPropagation()}
+                className="bg-[#090d16] border-2 border-[#2bc2c2]/40 rounded-3xl p-6 max-w-sm w-full shadow-[0_0_30px_rgba(43,194,194,0.25)] relative"
+              >
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-10 h-10 rounded-full bg-[#2bc2c2]/10 flex items-center justify-center text-[#2bc2c2] shrink-0">
+                    <Zap size={20} className="animate-pulse" />
+                  </div>
+                  <h3 className="font-bold text-lg text-white">إشعار المنصة</h3>
+                </div>
+                <p className="text-sm text-gray-300 leading-relaxed font-light mb-6">
+                  {alertMessage}
+                </p>
+                <button 
+                  onClick={() => setAlertMessage(null)}
+                  className="w-full py-3 bg-gradient-to-r from-brand-blue to-brand-purple text-white font-bold text-sm rounded-xl active:scale-95 transition-all cursor-pointer shadow-lg"
+                >
+                  حسنًا، فهمت
+                </button>
+              </motion.div>
+            </div>
+          )}
+        </AnimatePresence>
 
       </div>
     </section>
