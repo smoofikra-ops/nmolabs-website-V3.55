@@ -517,7 +517,7 @@ export const Solutions = () => {
                     alt="Zid" 
                     className="w-20 h-20 md:w-20 md:h-20 object-contain drop-shadow-[0_4px_12px_rgba(124,58,237,0.4)] shrink-0" 
                     onError={(e) => {
-                      e.currentTarget.src = "https://media.zid.store/13b20f5f-3857-45e3-9134-458d965caf58/a8827d63-f750-41ea-b5b2-1be59091326a.png";
+                      e.currentTarget.src = "https://heroku-jareed-cad.s3.amazonaws.com/jareed-cad/story/2024/2/sample_image_ijRncbe.png";
                     }}
                   />
                   <span className="text-sm font-bold text-white">زد</span>
